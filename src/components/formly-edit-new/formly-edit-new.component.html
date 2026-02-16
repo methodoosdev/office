@@ -1,0 +1,37 @@
+
+<div *ngIf="inputs" [@animationState]="animate ? 'active' : 'inactive'">
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+
+            <button *ngIf="saveButtonVisible" kendoButton [disabled]="!hasChanges" (click)="save(false)" themeColor="info"> {{saveLabel}} </button>
+            <button kendoButton [disabled]="!hasChanges" (click)="saveAndExit()" themeColor="success"> {{saveAndExitLabel}} </button>
+            <button kendoButton [disabled]="!hasChanges" (click)="cancel()" themeColor="warning"> {{cancelLabel}} </button>
+            <button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+        </div>
+    </div>
+
+    <div *ngIf="toolbarTemplate">
+        <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
+    </div>
+
+    <div [ngClass]="{ 'k-box': borderForm }">
+
+        <form [formGroup]="inputs.form" class="k-form" [ngClass]="{'k-form-horizontal': horizontal,'k-form-vertical': !horizontal}">
+            <formly-form [form]="inputs.form"
+                         [model]="inputs.model"
+                         [fields]="inputs.fields"
+                         [options]="inputs.options"
+                         (modelChange)="modelChangeEvent($event)">
+            </formly-form>
+        </form>
+
+        <ng-content></ng-content>
+        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+
+    </div>
+
+</div>
