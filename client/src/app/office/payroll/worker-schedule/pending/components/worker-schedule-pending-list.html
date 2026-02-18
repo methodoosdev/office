@@ -1,0 +1,18 @@
+<form-list [uow]="uow"
+           [newRecordButtonVisible]="false"
+           [deleteRecordButtonVisible]="false"
+           [checkboxColumnVisible]="false"
+           [toExcelButtonVisible]="true"
+           [allowDblClickRow]="false"
+           [pathUrl]="pathUrl">
+
+    <ng-template pTemplate="header">
+        <div class="card-header-wrapper">
+            <h4 class="card-title"> {{ table?.searchModel?.title }} </h4>
+            <div class="card-buttons">
+                <button kendoButton (click)="refresh()" themeColor="success"> {{ refreshLabel }} </button>
+            </div>
+        </div>
+    </ng-template>
+
+</form-list>

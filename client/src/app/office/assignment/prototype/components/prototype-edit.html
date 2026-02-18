@@ -1,0 +1,18 @@
+<formly-edit [uow]="uow" [parentUrl]="parentUrl" (onAfterModelChange)="afterModelChange($event)"
+			 [horizontal]="false" [borderForm]="false">
+
+	<kendo-expansionpanel *ngIf="parentId"
+						  [title]="assignmentPrototypeActionsLabel"
+						  [expanded]="true"
+						  class="k-expansionpanel-grid"
+						  style="margin-top: 1rem;">
+
+		<form-list-detail-mapping [parentId]="parentId"
+								  [uow]="assignmentPrototypeActionsByAssignmentPrototypeUow"
+								  [dialogTitle]="assignmentPrototypeActionsLabel"
+								  [dialogUow]="assignmentPrototypeActionUow">
+		</form-list-detail-mapping>
+
+	</kendo-expansionpanel>
+
+</formly-edit>

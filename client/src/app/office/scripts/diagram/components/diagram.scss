@@ -1,0 +1,16 @@
+.diagram-scroll {
+    height: 80vh; /* or any fixed size */
+    border: 1px solid #ddd;
+    overflow: auto; /* ← gives you scrollbars when inner is larger */
+}
+
+.diagram-canvas {
+    min-width: 800px; /* safety minimums */
+    min-height: 600px;
+}
+
+kendo-diagram {
+    display: block;
+    width: 100%;
+    height: 100%;
+}

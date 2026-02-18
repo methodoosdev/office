@@ -1,0 +1,115 @@
+<div>
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div class="k-gradient p-3 mb-3">
+        <form [formGroup]="searchForm" class="k-form k-form-vertical">
+            <formly-form [form]="searchForm" [model]="searchModel" [fields]="searchFields" [options]="searchOptions" (modelChange)="modelChangeEvent($event)"></formly-form>
+        </form>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'" style="margin-bottom: 1rem;">
+
+        <kendo-grid #table
+                    [resizable]="true" [data]="gridData">
+            <ng-template kendoGridToolbarTemplate>
+                <div class="main-toolbar-title" style="font-size:1rem;">{{ title1 }}</div>
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                <button kendoButton (click)="exportToPdf()" themeColor="warning" [disabled]="!canExport"> Pdf </button>
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+            </ng-template>
+            <kendo-grid-column *ngFor="let column of columns"
+                               [field]="column.field"
+                               [title]="column.title"
+                               [format]="column.format"
+                               [style]="column.style">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                    <ng-container [ngSwitch]="column.fieldType">
+                        <span *ngSwitchCase="'checkbox'" class="checkbox-column">
+                            <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem[col.field], 'k-i-check-circle k-color-success': dataItem[col.field]}"></span>
+                            &nbsp;<span style="font-size:14px;">{{ dataItem[col.field] === true ? yesLabel : noLabel}}</span>
+                        </span>
+                        <div *ngSwitchCase="'decimal'" class="decimal-column">
+                            {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                        </div>
+                        <div *ngSwitchDefault>
+                            {{dataItem[col.field]}}
+                        </div>
+                    </ng-container>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-excel fileName="aggregateAnalysis.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+
+    </div>
+
+    <div *ngIf="progressData" [@animationState]="animate ? 'active' : 'inactive'" style="margin-bottom: 1rem;">
+
+        <kendo-grid #table2
+                    [resizable]="true" [data]="progressData">
+            <ng-template kendoGridToolbarTemplate>
+                <div class="main-toolbar-title" style="font-size:1rem;">{{ title2 }}</div>
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport2"> Excel </button>
+                <button kendoButton (click)="table2.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+            </ng-template>
+            <kendo-grid-column *ngFor="let column of columns"
+                               [field]="column.field"
+                               [title]="column.title"
+                               [format]="column.format"
+                               [style]="column.style">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                    <ng-container [ngSwitch]="column.fieldType">
+                        <div *ngSwitchCase="'decimal'" class="decimal-column">
+                            {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                        </div>
+                        <div *ngSwitchDefault>
+                            {{dataItem[col.field]}}
+                        </div>
+                    </ng-container>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-excel fileName="progressAnalysis.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+    </div>
+
+    <div *ngIf="totalData" [@animationState]="animate ? 'active' : 'inactive'" style="margin-bottom: 1rem;">
+
+        <kendo-grid #table3
+                    [resizable]="true" [data]="totalData">
+            <ng-template kendoGridToolbarTemplate>
+                <div class="main-toolbar-title" style="font-size:1rem;">{{ title3 }}</div>
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport3"> Excel </button>
+                <button kendoButton (click)="table3.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+            </ng-template>
+            <kendo-grid-column *ngFor="let column of totalColumns"
+                               [field]="column.field"
+                               [title]="column.title"
+                               [format]="column.format"
+                               [width]="column.width"
+                               [style]="column.style">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                    <ng-container [ngSwitch]="column.fieldType">
+                        <div *ngSwitchCase="'decimal'" class="decimal-column">
+                            {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                        </div>
+                        <div *ngSwitchDefault>
+                            {{dataItem[col.field]}}
+                        </div>
+                    </ng-container>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-excel fileName="totalAnalysis.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+    </div>
+
+</div>

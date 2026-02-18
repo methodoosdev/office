@@ -1,0 +1,19 @@
+<formly-edit [uow]="uow" [parentUrl]="parentUrl" [borderForm]="false" (onAfterModelChange)="afterModelChange($event)">
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="customerPermissionsLabel"
+                          [expanded]="true"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-mapping [parentId]="parentId"
+                                  [uow]="customerPermissionsByCustomerUow"
+                                  [dialogTitle]="customerPermissionsLabel"
+                                  [dialogUow]="customerPermissionUow"
+                                  [copyButtonVisible]="true"
+                                  (onCopyFunctionClick)="copyPermissions($event)">
+        </form-list-detail-mapping>
+
+    </kendo-expansionpanel>
+
+</formly-edit>

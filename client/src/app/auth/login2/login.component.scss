@@ -1,0 +1,119 @@
+
+.signin {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  color: #ffffff;
+  background-color: #212121;
+  background-image: url( "../../../assets/layout/images/login-left-bg.png" ), url( "../../../assets/layout/images/login-right-bg.png" );
+  background-position: left center, right bottom;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .signin-title {
+    /*font-size: 4em;*/
+  }
+
+  .signin-subtitle {
+    font-size: 1em;
+  }
+}
+
+.signin-form {
+  width: 360px;
+  padding: 3rem;
+  background: radial-gradient(circle at 50% 3%, #9e9e9e, #212121);
+  border-radius: 2px;
+}
+
+
+
+      .signin-form .login-label {
+        color: #cccccc;
+        margin-bottom: 5px;
+      }
+
+      .signin-form .login-input {
+        margin-top: 5px;
+      }
+
+      .signin-form .guest-sign-in {
+        color: #999999;
+        font-size: 12px;
+      }
+
+      .signin-form .welcome-text {
+        margin-bottom: 0;
+      }
+
+      .signin-form .link-pane {
+        padding-top: 24px;
+      }
+
+        .signin-form .link-pane button {
+          color: #cccccc;
+        }
+
+      .signin-form .button-pane {
+        padding-top: 16px;
+      }
+
+@media (max-width: 640px) {
+  .signin-form {
+    /*padding: 0 50px;*/
+    background: radial-gradient(circle at 50% 3%, transparent, #212121);
+  }
+}
+
+.signin .p-inputtext {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  color: #495057;
+  background: #ffffff;
+  padding: 0.5rem 0.5rem;
+  border: 1px solid #ced4da;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  border-radius: 3px;
+  width: 100%;
+}
+
+.signin .p-inputtext:enabled:hover {
+  border-color: #2196F3;
+}
+
+.signin .p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #a6d5fa;
+  border-color: #2196F3;
+}
+
+.signin .p-button {
+  color: #ffffff;
+  background: #2196F3;
+  border: 1px solid #2196F3;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  border-radius: 3px;
+  margin: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.signin .p-button:enabled:hover {
+  background: #0d89ec;
+  color: #ffffff;
+  border-color: #0d89ec;
+}
+.signin .p-button:disabled {
+  background: #4fc3f7;
+  border-color: #4fc3f7;
+  cursor: default;
+}

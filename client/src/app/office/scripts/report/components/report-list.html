@@ -1,0 +1,46 @@
+
+<kendo-grid *ngIf="pivotData"
+            [data]="pivotData"
+            [resizable]="true"
+            [groupable]="groupable"
+            [group]="groups">
+    <ng-template kendoGridToolbarTemplate>
+        <h6>{{title}}</h6>
+        <kendo-grid-spacer></kendo-grid-spacer>
+
+        <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport">Excel</button>
+        <button kendoGridPDFCommand themeColor="warning" [disabled]="!canExport">Pdf</button>
+
+    </ng-template>
+    <kendo-grid-column *ngFor="let col of pivotColumns"
+                       [field]="col.field"
+                       [title]="col.title"
+                       [hidden]="col.hidden"
+                       [width]="col.width"
+                       [minResizableWidth]="col.minResizableWidth"
+                       [filter]="col.filter"
+                       [format]="col.format"
+                       [headerStyle]="{'justify-content': col.headerAlign}"
+                       [style]="{'text-align': col.textAlign}">
+        <ng-template kendoGridGroupHeaderTemplate let-value="value">
+            {{value}}
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-excel fileName="excelGrid.xlsx"></kendo-grid-excel>
+    <kendo-grid-pdf fileName="printGrid.pdf"
+                    [allPages]="true"
+                    paperSize="A4"
+                    margin="1cm"
+                    [scale]="0.6"
+                    [repeatHeaders]="true">
+        <ng-template kendoGridPDFTemplate
+                     let-pageNum="pageNum"
+                     let-totalPages="totalPages">
+            <div class="page-template">
+                <div class="footer">{{ pageNum }} / {{ totalPages }}</div>
+            </div>
+        </ng-template>
+    </kendo-grid-pdf>
+
+</kendo-grid>

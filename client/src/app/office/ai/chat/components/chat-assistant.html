@@ -1,0 +1,57 @@
+<div class="container">
+    <h2>Βοηθός τεχνητής νοημοσύνης</h2>
+    <div class="small">ChatId: {{ chatId }}</div>
+
+    <!-- System prompt (optional persona/guardrails) -->
+    <div style="margin: 1rem 0;">
+        <label class="small">Εκμάθηση</label>
+        <textarea [(ngModel)]="systemPrompt" aria-label="Εκμάθηση"
+                  class="k-textarea k-input !k-flex-col k-input-md k-rounded-md k-input-solid">
+        </textarea>
+    </div>
+
+    <!-- Conversation Thread -->
+    <h3>Συνομιλία</h3>
+    <div class="thread">
+        <div *ngFor="let m of history" class="msg" [ngClass]="m.role">
+            <div class="bubble">
+                <strong *ngIf="m.role === 'user'">Εγώ: </strong>
+                <strong *ngIf="m.role === 'assistant'">Βοηθός: </strong>
+                {{ m.content }}
+            </div>
+        </div>
+
+        <!-- Live streaming message while generating -->
+        <div *ngIf="streamed" class="msg assistant">
+            <div class="bubble streaming">
+                <strong>Βοηθός: </strong>{{ streamed }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Final (optional: the same content is appended to history on completed) -->
+    <!--<div style="margin-top: 1rem;">
+        <h3>Final (from REST)</h3>
+        <div class="bubble assistant">{{ finalAnswer }}</div>
+    </div>-->
+
+    <!-- Message input -->
+    <div style="margin: 1rem 0;">
+        <label class="small">Γράψε το μήνυμά σου</label>
+        <textarea id="userMessage"
+                  [(ngModel)]="userMessage"
+                  (keydown)="onEnter($event)"
+                  class="k-textarea k-input !k-flex-col k-input-md k-rounded-md k-input-solid"
+                  placeholder="Γράψε εδώ. Enter για αποστολή — Shift+Enter για νέα γραμμή"
+                  aria-label="Your message">
+    </textarea>
+    </div>
+
+    <div class="row" style="margin-bottom: 1rem;">
+        <button (click)="send()" [disabled]="isBusy || !userMessage.trim()" class="k-button k-button-md k-rounded-md k-button-solid-primary k-button-solid">Αποστολή</button>
+        <button (click)="newChat()" class="k-button k-button-md k-rounded-md k-button-solid-primary k-button-solid">Νέα συνομιλία</button>
+        <span *ngIf="isBusy" class="small">Παρακαλώ περιμένετε…</span>
+    </div>
+
+</div>
+

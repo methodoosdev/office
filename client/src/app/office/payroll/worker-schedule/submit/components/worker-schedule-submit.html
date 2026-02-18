@@ -1,0 +1,413 @@
+<div *ngIf="view" class="worker-schedule-wrapper" [@animationState]="animate ? 'active' : 'inactive'">
+    <div class="sticky-wrapper">
+        <div class="flex flex-wrap p-3">
+            <div class="flex align-items-center justify-content-center">
+                <div class="flex flex-column">
+                    <div class="flex align-items-center justify-content-start">
+                        <h5 style="margin:0;">{{ title }}</h5>
+                    </div>
+                    <div class="flex align-items-center justify-content-start">
+                        <h6 style="margin:0;color: gray;">{{ traderName }}</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="flex align-items-center justify-content-end flex-grow-1">
+
+                <div class="flex flex-wrap">
+                    <div class="flex align-items-center justify-content-center m-1">
+                        <button kendoButton [disabled]="hasChanges" (click)="inform()" themeColor="primary" style="margin-right: 10px;"> {{ informLabel }} </button>
+                        <button kendoButton [disabled]="hasChanges" (click)="check()" themeColor="warning" style="margin-right: 10px;"> {{ checkLabel }} </button>
+                        <button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="canEdit" [@slideInOut]="shiftPanelVisible ? 'in' : 'out'">
+            <div *ngIf="shifts.length > 0">
+                <kendo-buttongroup style="display: block;">
+                    <button *ngFor="let shift of shifts" style="margin: 0 10px 10px 10px;"
+                            kendoButton
+                            (click)="selectedShiftChange(shift)">
+                        {{ shift.description }}
+                    </button>
+                </kendo-buttongroup>
+            </div>
+
+            <div *ngIf="shifts.length == 0" style="margin: 0 1rem">
+                {{noRecordsLabel}}
+            </div>
+
+        </div>
+
+    </div>
+
+    <form novalidate #myForm="ngForm">
+        <kendo-grid #grid [data]="view | async"
+                    [rowClass]="rowCallback"
+                    [kendoGridSelectBy]="dataKey"
+                    [(selectedKeys)]="selectedKeys"
+                    [selectable]="selectableSettings"
+                    [group]="groups"
+                    [groupable]="{ showFooter: true }"
+                    (groupChange)="onGroupChange($event)"
+                    [resizable]="true"
+                    (edit)="editHandler($event)"
+                    (cancel)="cancelHandler($event)"
+                    (save)="saveHandler($event)"
+                    [isGroupExpanded]="isGroupExpanded"
+                    (groupCollapse)="toggleGroup($event)"
+                    (groupExpand)="toggleGroup($event)"
+                    [navigable]="true">
+            <ng-template kendoGridToolbarTemplate>
+                <kendo-textbox [placeholder]="searchLabel" [style.width.em]="20" [ngModel]="quickSearch"
+                               [ngModelOptions]="{standalone: true, name: 'quickSearch'}"
+                               [clearButton]="true" (afterValueChanged)="onQuickSearchValueChange($event)">
+                </kendo-textbox>
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <!--<button kendoButton (selectedChange)="shiftPanelChange($event)" [selected]="false" [toggleable]="true" icon="bold"></button>-->
+                <button kendoButton (selectedChange)="expandedValueChange($event)" [selected]="false" [toggleable]="true">{{initiallyExpanded ? collapseLabel : expandLabel}}</button>
+                <button kendoButton (selectedChange)="groupValueChange($event)" [selected]="false" [toggleable]="true" icon="group-section"></button>
+                <button kendoButton (selectedChange)="breakControlsChange($event)" [selected]="false" [toggleable]="true" icon="sum"></button>
+                <button kendoButton (click)="grid.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                <button kendoButton (click)="grid.saveAsPDF()" themeColor="warning"> Pdf </button>
+
+            </ng-template>
+
+            <kendo-grid-checkbox-column [width]="45"
+                                        [headerClass]="{ 'text-center': true }"
+                                        [class]="{ 'text-center': true, 'time-column': true }"
+                                        [resizable]="false"
+                                        [columnMenu]="false"
+                                        [showSelectAll]="true">
+            </kendo-grid-checkbox-column>
+
+            <kendo-grid-column [width]="200" [minResizableWidth]="200" [maxResizableWidth]="200"
+                               [field]="columns.workerCardName.field"
+                               [title]="columns.workerCardName.title"
+                               [format]="columns.workerCardName.format"
+                               [hidden]="columns.workerCardName.hidden"
+                               [media]="columns.workerCardName.media"
+                               [style]="columns.workerCardName.style"
+                               [headerStyle]="columns.workerCardName.headerStyle"
+                               [class]="{ 'time-column': true }"
+                               [groupable]="false">
+                <ng-template kendoGridGroupHeaderTemplate let-value="value"> {{value}} </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column [width]="200" [minResizableWidth]="120" [maxResizableWidth]="200"
+                               [field]="columns.workingDate.field"
+                               [title]="columns.workingDate.title"
+                               [format]="columns.workingDate.format"
+                               [hidden]="columns.workingDate.hidden"
+                               [media]="columns.workingDate.media"
+                               [style]="columns.workingDate.style"
+                               [headerStyle]="columns.workingDate.headerStyle"
+                               [class]="{ 'text-center': true, workingDateColumn: true, 'time-column': true }"
+                               [groupable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem[columns.workingDate.field] | kendoDate: { weekday: "short", day: "2-digit", month: "2-digit", year: "2-digit"} }}
+                </ng-template>
+                <ng-template kendoGridGroupHeaderTemplate let-value="value"> {{value | kendoDate}} </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-command-column *ngIf="canEdit" title="&nbsp;" [width]="90" [minResizableWidth]="90" [maxResizableWidth]="90">
+                <ng-template kendoGridCellTemplate let-isNew="isNew">
+                    <button kendoGridSaveCommand type="button" icon="save" size="small" themeColor="primary" [disabled]="myForm.invalid || myForm.pristine"></button>
+                    <button kendoGridEditCommand type="button" icon="edit" size="small"></button>
+                    <button kendoGridCancelCommand type="button" icon="reset" size="small" themeColor="warning"></button>
+                </ng-template>
+            </kendo-grid-command-column>
+
+            <kendo-grid-column field="nonstopFromDate" title="&nbsp;" [groupable]="false" [width]="638" [minResizableWidth]="638" [maxResizableWidth]="810">
+                <ng-template kendoGridEditTemplate let-dataItem="dataItem">
+                    <!--<div style="width: 784px;"></div>-->
+
+                    <div class="k-form">
+
+                        <div class="wrap">
+
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-label [text]="columns.nonstopFromDate.title"></kendo-label>
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'nonstopFromDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="nonstopFromDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['nonstopFromDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-label [text]="columns.nonstopToDate.title"></kendo-label>
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'nonstopToDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="nonstopToDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['nonstopToDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-label [text]="columns.breakNonstopFromDate.title"></kendo-label>
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'breakNonstopFromDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="breakNonstopFromDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['breakNonstopFromDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-label [text]="columns.breakNonstopToDate.title"></kendo-label>
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'breakNonstopToDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="breakNonstopToDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['breakNonstopToDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div *ngIf="breakControlsVisible" class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-label [text]="columns.breakNonstop2FromDate.title"></kendo-label>
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'breakNonstop2FromDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="breakNonstop2FromDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['breakNonstop2FromDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div *ngIf="breakControlsVisible" class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-label [text]="columns.breakNonstop2ToDate.title"></kendo-label>
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'breakNonstop2ToDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="breakNonstop2ToDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['breakNonstop2ToDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div" style="width: 50px;">
+
+                                <kendo-formfield class="wrap-control" style="text-align: center;">
+                                    <kendo-label for="leave1" [text]="columns.leave.title"></kendo-label>
+                                    <input #leave kendoCheckBox id="leave1" type="checkbox" (change)="onTimeChange($event, dataItem, 'leave')"
+                                           name="leave" [(ngModel)]="dataItem['leave']" [disabled]="sickLeave?.checked" />
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div" style="width: 72px;">
+
+                                <kendo-formfield class="wrap-control" style="text-align: center;">
+                                    <kendo-label for="sickLeave1" [text]="columns.sickLeave.title"></kendo-label>
+                                    <input #sickLeave kendoCheckBox id="sickLeave1" type="checkbox" (change)="onTimeChange($event, dataItem, 'sickLeave')"
+                                           name="sickLeave" [(ngModel)]="dataItem['sickLeave']" [disabled]="leave?.checked" />
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div" style="width: 50px;">
+
+                                <kendo-formfield class="wrap-control" style="text-align: center;">
+                                    <kendo-label for="isSplit1" [text]="columns.isSplit.title"></kendo-label>
+                                    <input #isSplit kendoCheckBox id="isSplit1" type="checkbox" (change)="onTimeChange($event, dataItem, 'isSplit')"
+                                           name="isSplit" [(ngModel)]="dataItem['isSplit']" [disabled]="leave?.checked || sickLeave?.checked" />
+                                </kendo-formfield>
+                            </div>
+                        </div>
+
+                        <div class="wrap" [style.display]="dataItem.isSplit ? 'flex' : 'none'">
+
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'splitFromDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="splitFromDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['splitFromDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'splitToDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="splitToDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['splitToDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'breakSplitFromDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="breakSplitFromDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['breakSplitFromDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                            <div class="wrap-div">
+
+                                <kendo-formfield class="wrap-control">
+                                    <kendo-timepicker [min]="minDate" [max]="maxDate" (valueChange)="onTimeChange($event, dataItem, 'breakSplitToDate')"
+                                                      [style.width.px]="90" [size]="'small'" format="HH:mm" name="breakSplitToDate" [nowButton]="false"
+                                                      [(ngModel)]="dataItem['breakSplitToDate']" [disabled]="leave?.checked || sickLeave?.checked"></kendo-timepicker>
+                                </kendo-formfield>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </ng-template>
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    <div style="width: 784px;"></div>
+
+                    <div class="k-form">
+
+                        <div class="wrap cell-template">
+
+                            <div class="wrap-div" [title]="columns.nonstopFromDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="k-label">{{columns.nonstopFromDate.title}}</div>
+                                    <div class="time">{{dataItem.nonstopFromDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div" [title]="columns.nonstopToDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="k-label">{{columns.nonstopToDate.title}}</div>
+                                    <div class="time">{{dataItem.nonstopToDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div" [title]="columns.breakNonstopFromDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="k-label">{{columns.breakNonstopFromDate.title}}</div>
+                                    <div class="time">{{dataItem.breakNonstopFromDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div" [title]="columns.breakNonstopToDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="k-label">{{columns.breakNonstopToDate.title}}</div>
+                                    <div class="time">{{dataItem.breakNonstopToDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div *ngIf="breakControlsVisible" class="wrap-div">
+
+                                <div class="wrap-control" [title]="columns.breakNonstop2FromDate.titleTooltip">
+                                    <div class="k-label">{{columns.breakNonstop2FromDate.title}}</div>
+                                    <div class="time">{{dataItem.breakNonstop2FromDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div *ngIf="breakControlsVisible" class="wrap-div">
+
+                                <div class="wrap-control" [title]="columns.breakNonstop2ToDate.titleTooltip">
+                                    <div class="k-label">{{columns.breakNonstop2ToDate.title}}</div>
+                                    <div class="time">{{dataItem.breakNonstop2ToDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div checkbox" style="width: 50px;">
+
+                                <div class="wrap-control" style="text-align: center;">
+                                    <div class="k-label">{{columns.leave.title}}</div>
+                                    <div>
+                                        <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem.leave, 'k-i-check-circle k-color-success': dataItem.leave}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wrap-div checkbox" style="width: 72px;">
+
+                                <div class="wrap-control" style="text-align: center;">
+                                    <div class="k-label">{{columns.sickLeave.title}}</div>
+                                    <div>
+                                        <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem.sickLeave, 'k-i-check-circle k-color-success': dataItem.sickLeave}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="wrap-div checkbox" style="width: 50px;">
+
+                                <div class="wrap-control" style="text-align: center;">
+                                    <div class="k-label">{{columns.isSplit.title}}</div>
+                                    <div>
+                                        <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem.isSplit, 'k-i-check-circle k-color-success': dataItem.isSplit}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wrap cell-template" [style.display]="dataItem.isSplit ? 'flex' : 'none'">
+
+                            <div class="wrap-div" [title]="columns.splitFromDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="time">{{dataItem.splitFromDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div" [title]="columns.splitToDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="time">{{dataItem.splitToDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div" [title]="columns.breakSplitFromDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="time">{{dataItem.breakSplitFromDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                            <div class="wrap-div" [title]="columns.breakSplitToDate.titleTooltip">
+
+                                <div class="wrap-control">
+                                    <div class="time">{{dataItem.breakSplitToDate | kendoDate: 'HH:mm'}}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="110" [minResizableWidth]="110" [maxResizableWidth]="110"
+                               [field]="columns.dailyBreak.field"
+                               [title]="columns.dailyBreak.title"
+                               [media]="columns.dailyBreak.media"
+                               [style]="columns.dailyBreak.style"
+                               [headerStyle]="columns.dailyBreak.headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ getString(dataItem['dailyBreak']) }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="110" [minResizableWidth]="110" [maxResizableWidth]="110"
+                               [field]="columns.dailyTotalHours.field"
+                               [title]="columns.dailyTotalHours.title"
+                               [media]="columns.dailyTotalHours.media"
+                               [style]="columns.dailyTotalHours.style"
+                               [headerStyle]="columns.dailyTotalHours.headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ getString(dataItem['dailyTotalHours']) }}
+                </ng-template>
+                <ng-template kendoGridGroupFooterTemplate let-aggregates="aggregates">
+                    <div style="text-align: right;">
+                        {{ getString(aggregates.dailyTotalHours.sum) }}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-pdf fileName="cashAvailable.pdf"
+                            [allPages]="true"
+                            paperSize="A4"
+                            margin="1cm"
+                            [landscape]="true"
+                            [scale]="0.6"
+                            [repeatHeaders]="true">
+                <ng-template kendoGridPDFTemplate
+                             let-pageNum="pageNum"
+                             let-totalPages="totalPages">
+                    <div class="page-template">
+                        <div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+                    </div>
+                </ng-template>
+            </kendo-grid-pdf>
+
+        </kendo-grid>
+    </form>
+</div>
+
+<ng-template #dialogTemplate>
+    <div [innerHtml]="dialogContent | safe: 'html'" style="margin: 10px;"></div>
+</ng-template>

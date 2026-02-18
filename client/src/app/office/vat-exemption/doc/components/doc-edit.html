@@ -1,0 +1,6 @@
+<formly-edit [uow]="uow" 
+           [parentUrl]="parentUrl" 
+           [borderForm]="false"
+           [exportToPdfButtonVisible]="true"
+           (onExportToPdf)="exportToPdf()"
+           (onAfterModelChange)="afterModelChange($event)"></formly-edit>

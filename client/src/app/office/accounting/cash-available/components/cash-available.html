@@ -1,0 +1,127 @@
+<div>
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div class="k-gradient p-3 mb-3">
+        <form [formGroup]="searchForm" class="k-form k-form-vertical">
+            <formly-form [form]="searchForm" [model]="searchModel" [fields]="searchFields" [options]="searchOptions" (modelChange)="modelChangeEvent($event)"></formly-form>
+        </form>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <kendo-grid #table
+                    kendoGridSelectBy="id"
+                    [group]="byType"
+                    [groupable]="false"
+                    [resizable]="true"
+                    [data]="gridData">
+            <ng-template kendoGridToolbarTemplate>
+
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                <button kendoGridPDFCommand themeColor="warning" [disabled]="!canExport">Pdf</button>
+
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                <kendo-grid-column-chooser></kendo-grid-column-chooser>
+            </ng-template>
+
+            <kendo-grid-column [width]="columns[0].width"
+                               [field]="columns[0].field"
+                               [title]="columns[0].title"
+                               [hidden]="columns[0].hidden"
+                               [media]="columns[0].media"
+                               [style]="columns[0].style"
+                               [headerStyle]="columns[0].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem[columns[0].field] }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[1].width"
+                               [field]="columns[1].field"
+                               [title]="columns[1].title"
+                               [hidden]="columns[1].hidden"
+                               [media]="columns[1].media"
+                               [style]="columns[1].style"
+                               [headerStyle]="columns[1].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem[columns[1].field] }}
+                </ng-template>
+                <ng-template kendoGridFooterTemplate>
+                    <div style="font-weight: 500; font-size: 16px;">
+                        {{ grandTotalLabel }}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[2].width"
+                               [field]="columns[2].field"
+                               [title]="columns[2].title"
+                               [hidden]="columns[2].hidden"
+                               [media]="columns[2].media"
+                               [style]="columns[2].style"
+                               [headerStyle]="columns[2].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem['total'] | kendoNumber: '#,##0.00' }}
+                </ng-template>
+                <ng-template kendoGridGroupFooterTemplate let-aggregates="aggregates">
+                    <div style="text-align: right;">
+                        {{ aggregates.total.sum | kendoNumber: '#,##0.00' }}
+                    </div>
+                </ng-template>
+                <ng-template kendoGridFooterTemplate>
+                    <div style="text-align: right; color: #1274AC;">
+                        {{total | kendoNumber: '#,##0.00'}}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[3].width"
+                               [field]="columns[3].field"
+                               [title]="columns[3].title"
+                               [hidden]="columns[3].hidden"
+                               [media]="columns[3].media"
+                               [style]="columns[3].style"
+                               [headerStyle]="columns[3].headerStyle"
+                               [groupable]="false">
+                <ng-template kendoGridGroupHeaderTemplate let-value="value">
+                    {{ value == '1.Cash' ? cashLabel : value == '2.Bank' ? bankLabel : value == '3.Term' ? termLabel : bankLabel }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-excel fileName="cashAvailable.xlsx"></kendo-grid-excel>
+
+            <kendo-grid-pdf fileName="cashAvailable.pdf"
+                            [allPages]="true"
+                            paperSize="A4"
+                            margin="1cm"
+                            [scale]="0.6"
+                            [repeatHeaders]="true">
+                <ng-template kendoGridPDFTemplate
+                             let-pageNum="pageNum"
+                             let-totalPages="totalPages">
+                    <div class="page-template">
+                        <div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+                    </div>
+                </ng-template>
+            </kendo-grid-pdf>
+
+        </kendo-grid>
+
+    </div>
+
+</div>

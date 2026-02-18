@@ -1,0 +1,73 @@
+
+<ng-template #userConnectionBankTemplate let-dataItem let-rowIndex="rowIndex">
+
+    <form-list-detail-dialog #accountListGrid
+                             [insertButtonVisible]="false"
+                             [deleteButtonVisible]="false"
+                             [parentId]="dataItem.bankBIC"
+                             [uow]="accountListUow"
+						     (onColumnButtonClick)="onAccountButtonClick($event)">
+    </form-list-detail-dialog>
+
+    <p></p>
+
+    <form-list-detail-dialog #cardListItemGrid
+                             [insertButtonVisible]="false"
+                             [deleteButtonVisible]="false"
+                             [parentId]="dataItem.bankBIC"
+                             [uow]="cardListItemUow"
+						     (onColumnButtonClick)="onCardButtonClick($event)">
+    </form-list-detail-dialog>
+
+</ng-template>
+
+<formly-edit [uow]="uow"
+             [borderForm]="false"
+             [horizontal]="false"
+             [saveButtonVisible]="false"
+             [saveAndExitButtonVisible]="false"
+             [cancelButtonVisible]="false"
+             [parentUrl]="parentUrl"
+             (onAfterModelChange)="afterModelChange($event)">
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="true"
+                          [title]="availableBanksLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-dialog [parentId]="parentId"
+                                 [uow]="availableBankUow"
+                                 [toExcelButtonVisible]="false"
+                                 [toPdfButtonVisible]="false"
+                                 [insertButtonVisible]="false"
+                                 [deleteButtonVisible]="false"
+						         (onColumnButtonClick)="onConnectionButtonClick($event)">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="true"
+                          [title]="userConnectionsBankLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <div class="k-gradient p-3 mb-3">
+            <form [formGroup]="configForm" class="k-form k-form-vertical">
+                <formly-form [form]="configForm" [model]="configModel" [fields]="configFields" [options]="configOptions"></formly-form>
+            </form>
+        </div>
+
+        <form-list-detail-dialog [parentId]="parentId"
+                                 [uow]="userConnectionBankUow"
+                                 [detailTemplate]="userConnectionBankTemplate"
+                                 [toExcelButtonVisible]="false"
+                                 [toPdfButtonVisible]="false"
+                                 [insertButtonVisible]="false"
+                                 [deleteButtonVisible]="false">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+</formly-edit>

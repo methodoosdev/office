@@ -1,0 +1,17 @@
+<formly-edit [uow]="uow" [parentUrl]="parentUrl" [borderForm]="false" (onAfterModelChange)="afterModelChange($event)">
+
+    <kendo-expansionpanel *ngIf="parentId" 
+                          [title]="tradersLabel" 
+                          [expanded]="true" 
+                          class="k-expansionpanel-grid" 
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-mapping [parentId]="parentId"
+                                  [uow]="tradersByEmployeeUow"   
+                                  [dialogTitle]="tradersLabel"                                
+                                  [dialogUow]="traderUow">
+        </form-list-detail-mapping>
+
+    </kendo-expansionpanel>
+
+</formly-edit>

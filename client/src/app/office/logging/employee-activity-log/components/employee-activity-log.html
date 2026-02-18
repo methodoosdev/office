@@ -1,0 +1,96 @@
+<div>
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div *ngIf="inputs" class="k-gradient p-3 mb-3">
+
+        <form [formGroup]="inputs.form" class="k-form k-form-horizontal">
+            <formly-form [form]="inputs.form"
+                         [model]="inputs.model"
+                         [fields]="inputs.fields"
+                         [options]="inputs.options"
+                         (modelChange)="modelChangeEvent($event)">
+            </formly-form>
+        </form>
+
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <kendo-grid #table
+                    [group]="groups"
+                    [groupable]="false"
+                    [resizable]="true"
+                    [data]="gridData"
+                    (columnVisibilityChange)="onVisibilityChange($event)">
+            <ng-template kendoGridToolbarTemplate>
+
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                <button kendoGridPDFCommand themeColor="warning" [disabled]="!canExport"> Pdf </button>
+
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                <kendo-grid-column-chooser></kendo-grid-column-chooser>
+                <button kendoButton (click)="toggle()" icon="share"></button>
+            </ng-template>
+
+            <kendo-grid-column *ngFor="let col of columns"
+                               [width]="col.width"
+                               [field]="col.field"
+                               [title]="col.title"
+                               [format]="col.format"
+                               [hidden]="col.hidden"
+                               [media]="col.media"
+                               [filter]="col.filterType"
+                               [style]="col.style"
+                               [headerStyle]="col.headerStyle"
+                               [class]="col.class"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                    <ng-container [ngSwitch]="col.fieldType">
+                        <div *ngSwitchCase="'numeric'" class="numeric-column">
+                            {{dataItem[col.field] | kendoNumber: '#,##0'}}
+                        </div>
+                        <div *ngSwitchCase="'decimal'" class="decimal-column">
+                            {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                        </div>
+                        <div *ngSwitchDefault>
+                            {{dataItem[col.field]}}
+                        </div>
+                    </ng-container>
+                </ng-template>
+                <ng-template kendoGridGroupHeaderTemplate let-value="value"> {{value}} </ng-template>
+
+            </kendo-grid-column>
+
+            <kendo-grid-excel fileName="traderActivityLog.xlsx"></kendo-grid-excel>
+
+            <kendo-grid-pdf fileName="traderActivityLog.pdf"
+                            [allPages]="true"
+                            paperSize="A4"
+                            margin="1cm"
+                            [scale]="0.6"
+                            [repeatHeaders]="true">
+                <ng-template kendoGridPDFTemplate
+                             let-pageNum="pageNum"
+                             let-totalPages="totalPages">
+                    <div class="page-template">
+                        <div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+                    </div>
+                </ng-template>
+            </kendo-grid-pdf>
+
+        </kendo-grid>
+
+    </div>
+
+</div>
+

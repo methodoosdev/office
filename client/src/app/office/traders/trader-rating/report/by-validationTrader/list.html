@@ -1,0 +1,115 @@
+<div>
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <kendo-grid #table
+                    [kendoGridBinding]="gridData"
+                    [sortable]="sortable"
+                    [resizable]="true"
+                    [filter]="filter"
+                    filterable="menu"
+                    scrollable="virtual"
+                    (filterChange)="filterChange($event)">
+            <ng-template kendoGridToolbarTemplate>
+
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                <button kendoGridPDFCommand themeColor="warning" [disabled]="!canExport"> Pdf </button>
+
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                <kendo-grid-column-chooser></kendo-grid-column-chooser>
+            </ng-template>
+
+            <kendo-grid-column *ngFor="let col of columns"
+                               [width]="col.width"
+                               [field]="col.field"
+                               [title]="col.title"
+                               [format]="col.format"
+                               [hidden]="col.hidden"
+                               [media]="col.media"
+                               [filter]="col.filterType"
+                               [style]="col.style"
+                               [filterable]="col.filterable"
+                               [headerStyle]="col.headerStyle"
+                               [class]="col.class"
+                               [groupable]="false">
+
+                <ng-template kendoGridFilterMenuTemplate
+                             let-column="column"
+                             let-filter="filter"
+                             let-filterService="filterService">
+                    <multicheck-filter [isPrimitive]="false"
+                                       [field]="column.field"
+                                       [currentFilter]="filter"
+                                       [filterService]="filterService"
+                                       textField="traderName"
+                                       valueField="traderId"
+                                       [data]="traders"></multicheck-filter>
+                </ng-template>
+
+                <ng-template kendoGridFooterTemplate let-column>
+                    <div *ngIf="col.field == 'total'" style="text-align: right; color: #1274AC;">
+                        {{totals | kendoNumber: '#,##0.00'}}
+                    </div>
+                    <div *ngIf="col.field == 'income'" style="text-align: right; color: #1274AC;">
+                        {{incomes | kendoNumber: '#,##0.00'}}
+                    </div>
+                    <div *ngIf="col.field == 'expences'" style="text-align: right; color: #1274AC;">
+                        {{expences | kendoNumber: '#,##0.00'}}
+                    </div>
+                </ng-template>
+
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    <ng-container [ngSwitch]="col.fieldType">
+                        <!-- Numeric case -->
+                        <ng-container *ngSwitchCase="'numeric'">
+                            <span>{{ dataItem[col.field] | kendoNumber: '#,##0' }}</span>
+                        </ng-container>
+
+                        <!-- Decimal case -->
+                        <ng-container *ngSwitchCase="'decimal'">
+                            <span>{{ dataItem[col.field] | kendoNumber: '#,##0.00' }}</span>
+                        </ng-container>
+
+                        <!-- Percent case -->
+                        <ng-container *ngSwitchCase="'percent'">
+                            <span>{{ dataItem[col.field] | kendoNumber: '##0.00 "%"' }}</span>
+                        </ng-container>
+
+                        <!-- Default case -->
+                        <ng-container *ngSwitchDefault>
+                            <span>{{ dataItem[col.field] }}</span>
+                        </ng-container>
+                    </ng-container>
+                </ng-template>
+
+            </kendo-grid-column>
+
+            <kendo-grid-excel fileName="byValuationTable.xlsx"></kendo-grid-excel>
+
+            <kendo-grid-pdf fileName="byValuationTable.pdf"
+                            [allPages]="true"
+                            paperSize="A4"
+                            margin="1cm"
+                            [scale]="0.6"
+                            [repeatHeaders]="true">
+                <ng-template kendoGridPDFTemplate
+                             let-pageNum="pageNum"
+                             let-totalPages="totalPages">
+                    <div class="page-template">
+                        <div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+                    </div>
+                </ng-template>
+            </kendo-grid-pdf>
+
+        </kendo-grid>
+
+    </div>
+
+</div>

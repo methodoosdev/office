@@ -1,0 +1,7 @@
+<kendo-dialog-titlebar>
+    {{ title }}
+</kendo-dialog-titlebar>
+
+<form [formGroup]="inputs.form" class="k-form k-form-horizontal">
+    <formly-form [form]="inputs.form" [model]="inputs.model" [fields]="inputs.fields" [options]="inputs.options"></formly-form>
+</form>

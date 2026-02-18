@@ -1,0 +1,57 @@
+<div>
+
+    <div class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div *ngIf="searchForm" class="k-gradient p-3 mb-3 k-box">
+
+        <form [formGroup]="searchForm.form" class="k-form k-form-vertical">
+            <formly-form [form]="searchForm.form"
+                         [model]="searchForm.model"
+                         [fields]="searchForm.fields"
+                         [options]="searchForm.options"
+                         (modelChange)="modelChangeEvent($event)">
+            </formly-form>
+        </form>
+    </div>
+
+    <div *ngIf="dataResultForm" [@animationState]="animate ? 'active' : 'inactive'" class="k-gradient p-3 mb-3 k-box">
+
+        <form [formGroup]="dataResultForm.form" class="k-form k-form-horizontal">
+            <formly-form [form]="dataResultForm.form"
+                         [model]="dataResultForm.model"
+                         [fields]="dataResultForm.fields"
+                         [options]="dataResultForm.options">
+            </formly-form>
+        </form>
+    </div>
+
+    <kendo-expansionpanel *ngIf="dataForm"
+                          [@animationState]="animate ? 'active' : 'inactive'" 
+                          [title]="panelLabel"
+                          [expanded]="false"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <div class="k-gradient p-3 mb-3 k-box">
+
+            <form [formGroup]="dataForm.form" class="k-form k-form-horizontal">
+                <formly-form [form]="dataForm.form"
+                             [model]="dataForm.model"
+                             [fields]="dataForm.fields"
+                             [options]="dataForm.options">
+                </formly-form>
+            </form>
+        </div>
+
+    </kendo-expansionpanel>
+
+</div>
+
+

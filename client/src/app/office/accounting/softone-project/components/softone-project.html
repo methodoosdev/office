@@ -1,0 +1,27 @@
+<form-list [uow]="uow"
+           [pathUrl]="pathUrl"
+           [parentId]="infoModel?.traderId"
+           [checkboxColumnVisible]="false"
+           [toExcelButtonVisible]="true"
+           [toPdfButtonVisible]="false"
+           [loadDataBy]="undefined"
+           [infoModel]="infoModel || infoInputs?.model"
+           (onLoadProperties)="loadPropertiesEvent($event)">
+
+    <ng-template pTemplate="header">
+        <div class="card-header-wrapper">
+            <h4 class="card-title"> {{ title }} </h4>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="toolbar">
+
+        <div *ngIf="infoInputs" class="k-gradient p-3 mb-3">
+            <form [formGroup]="infoInputs.form" class="k-form k-form-vertical">
+                <formly-form [form]="infoInputs.form" [model]="infoInputs.model" [fields]="infoInputs.fields" [options]="infoInputs.options" (modelChange)="modelChangeEvent($event)"></formly-form>
+            </form>
+        </div>
+
+    </ng-template>
+
+</form-list>

@@ -1,0 +1,148 @@
+<div>
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div *ngIf="softOneConValid === false" style="color: #ff0000;"> {{ databaseConnectionFailedLabel }} </div>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <kendo-grid #table
+                    kendoGridSelectBy="code"
+                    [group]="byType"
+                    [groupable]="false"
+                    [resizable]="true"
+                    [data]="gridData">
+            <ng-template kendoGridToolbarTemplate>
+
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoButton (click)="exportToExcel()" themeColor="warning" [disabled]="!canExport"> {{ exportLabel }} </button>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                <button kendoGridPDFCommand themeColor="warning" [disabled]="!canExport">Pdf</button>
+
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                <kendo-grid-column-chooser></kendo-grid-column-chooser>
+            </ng-template>
+
+            <kendo-grid-column [width]="columns[0].width"
+                               [field]="columns[0].field"
+                               [title]="columns[0].title"
+                               [hidden]="columns[0].hidden"
+                               [media]="columns[0].media"
+                               [style]="columns[0].style"
+                               [headerStyle]="columns[0].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    <span [style.color]="colorCode(dataItem, columns[0].field)">
+                        {{ dataItem[columns[0].field] }}
+                    </span>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[1].width"
+                               [field]="columns[1].field"
+                               [title]="columns[1].title"
+                               [hidden]="columns[1].hidden"
+                               [media]="columns[1].media"
+                               [style]="columns[1].style"
+                               [headerStyle]="columns[1].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem[columns[1].field] }}
+                </ng-template>
+                <ng-template kendoGridFooterTemplate>
+                    <div style="font-weight: 500; font-size: 16px;">
+                        {{ grandTotalLabel }}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[2].width"
+                               [field]="columns[2].field"
+                               [title]="columns[2].title"
+                               [hidden]="columns[2].hidden"
+                               [media]="columns[2].media"
+                               [style]="columns[2].style"
+                               [headerStyle]="columns[2].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem['debit'] | kendoNumber: '#,##0.00' }}
+                </ng-template>
+                <ng-template kendoGridGroupFooterTemplate let-aggregates="aggregates">
+                    <div style="text-align: right;">
+                        {{ aggregates.debit.sum | kendoNumber: '#,##0.00' }}
+                    </div>
+                </ng-template>
+                <ng-template kendoGridFooterTemplate>
+                    <div style="text-align: right; color: #1274AC;">
+                        {{total1 | kendoNumber: '#,##0.00'}}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[3].width"
+                               [field]="columns[3].field"
+                               [title]="columns[3].title"
+                               [hidden]="columns[3].hidden"
+                               [media]="columns[3].media"
+                               [style]="columns[3].style"
+                               [headerStyle]="columns[3].headerStyle"
+                               [groupable]="false">
+
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ dataItem['credit'] | kendoNumber: '#,##0.00' }}
+                </ng-template>
+                <ng-template kendoGridGroupFooterTemplate let-aggregates="aggregates">
+                    <div style="text-align: right;">
+                        {{ aggregates.credit.sum | kendoNumber: '#,##0.00' }}
+                    </div>
+                </ng-template>
+                <ng-template kendoGridFooterTemplate>
+                    <div style="text-align: right; color: #1274AC;">
+                        {{total2 | kendoNumber: '#,##0.00'}}
+                    </div>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column [width]="columns[4].width"
+                               [field]="columns[4].field"
+                               [title]="columns[4].title"
+                               [hidden]="columns[4].hidden"
+                               [media]="columns[4].media"
+                               [style]="columns[4].style"
+                               [headerStyle]="columns[4].headerStyle"
+                               [groupable]="false">
+                <ng-template kendoGridGroupHeaderTemplate let-value="value" let-aggregates="aggregates">
+                    <span>{{ value }}</span>
+                    <span style="margin-right: 10px;">:</span>
+                    <span style="color: #0d6efd;">{{ (aggregates.debit.sum + aggregates.credit.sum) | kendoNumber: '#,##0.00' }}</span>
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-excel fileName="articlesCheck.xlsx"></kendo-grid-excel>
+
+            <kendo-grid-pdf fileName="articlesCheck.pdf"
+                            [allPages]="true"
+                            paperSize="A4"
+                            margin="1cm"
+                            [scale]="0.6"
+                            [repeatHeaders]="true">
+                <ng-template kendoGridPDFTemplate
+                             let-pageNum="pageNum"
+                             let-totalPages="totalPages">
+                    <div class="page-template">
+                        <div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+                    </div>
+                </ng-template>
+            </kendo-grid-pdf>
+
+        </kendo-grid>
+
+    </div>
+
+</div>

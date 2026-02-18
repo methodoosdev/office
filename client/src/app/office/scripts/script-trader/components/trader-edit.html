@@ -1,0 +1,149 @@
+
+<ng-template #scriptTableItemTemplate let-dataItem let-rowIndex="rowIndex">
+
+    <form-list-detail-dialog #scriptTableItemGrid
+                             [parentId]="dataItem.id"
+                             [uow]="scriptTableItemUow"
+                             (onModifyClick)="onScriptTableItemChange($event)">
+    </form-list-detail-dialog>
+
+</ng-template>
+
+<ng-template #scriptItemTemplate let-dataItem let-rowIndex="rowIndex">
+
+    <form-list-detail-dialog #scriptItemGrid
+                             [parentId]="dataItem.id"
+                             [uow]="scriptItemUow"
+                             (onModifyClick)="onScriptItemChange($event)">
+    </form-list-detail-dialog>
+
+</ng-template>
+
+<ng-template #scriptToolItemTemplate let-dataItem let-rowIndex="rowIndex">
+
+    <h5>Πληροφορίες αρχείου Excel</h5>
+
+    <table>
+        <tr>
+            <td style="font-weight: 500;">Όνομα αρχείου</td>
+            <td>{{dataItem.fileName}}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: 500;">Επέκταση</td>
+            <td>{{dataItem.extension}}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: 500;">Τύπος περιεχομένου</td>
+            <td>{{dataItem.contentType}}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: 500;">Μέγεθος Bytes</td>
+            <td>{{dataItem.sizeBytes}}</td>
+        </tr>
+        <tr>
+            <td style="font-weight: 500;">Ημερ.Δημιουργίας</td>
+            <td>{{dataItem.createdOnUtc}}</td>
+        </tr>
+    </table>
+
+</ng-template>
+
+<formly-edit [uow]="uow"
+             [borderForm]="false"
+             [horizontal]="false"
+             [saveButtonVisible]="false"
+             [saveAndExitButtonVisible]="false"
+             [cancelButtonVisible]="false"
+             [parentUrl]="parentUrl"
+             (onAfterModelChange)="afterModelChange($event)">
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="false"
+                          [title]="scriptGroupsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-dialog #scriptGroupGrid
+                                 [parentId]="parentId"
+                                 [uow]="scriptGroupUow"
+                                 (onModifyClick)="onScriptGroupChange($event)">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="false"
+                          [title]="scriptTablesLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-dialog #scriptTableGrid
+                                 [parentId]="parentId"
+                                 [uow]="scriptTableUow"
+                                 [detailTemplate]="scriptTableItemTemplate"
+                                 (onModifyClick)="onScriptTableChange($event)">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="false"
+                          [title]="scriptFieldsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-dialog #scriptFieldGrid
+                                 [parentId]="parentId"
+                                 [uow]="scriptFieldUow"
+                                 (onModifyClick)="onScriptFieldChange($event)">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="false"
+                          [title]="scriptsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-dialog #scriptGrid
+                                 [parentId]="parentId"
+                                 [uow]="scriptUow"
+                                 [detailTemplate]="scriptItemTemplate"
+                                 [customButtonVisible]="true"
+                                 [customButtonLabel]="printLabel"
+                                 customButtonTheme="warning"
+                                 [customButtonDisabled]="groupHeaderInputs.length === 0"
+                                 [groupHeaderInputVisible]="true"
+                                 (groupHeaderInputsChange)="groupHeaderInputsChange($event)"
+                                 (onModifyClick)="onScriptChange($event)"
+                                 (customButtonClick)="printCommand()">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [expanded]="false"
+                          [title]="scriptToolsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <div class="k-gradient p-3 mb-3">
+            <form [formGroup]="configForm" class="k-form k-form-vertical">
+                <formly-form [form]="configForm" [model]="configModel" [fields]="configFields" [options]="configOptions"></formly-form>
+            </form>
+        </div>
+
+        <form-list-detail-dialog #scriptToolGrid
+                                 [parentId]="parentId"
+                                 [uow]="scriptToolUow"
+                                 [detailTemplate]="scriptToolItemTemplate"
+                                 (onModifyClick)="onScriptToolChange($event)"
+                                 (onColumnButtonClick)="scriptToolGridButtonClick($event)">
+        </form-list-detail-dialog>
+
+    </kendo-expansionpanel>
+
+</formly-edit>
+
+<upload-tool [saveUrl]="uploadSaveUrl" [(dataItemId)]="dataItemId" (uploadSuccess)="onUploadSuccess($event)"></upload-tool>

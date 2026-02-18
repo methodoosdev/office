@@ -1,0 +1,53 @@
+<div class="grid-wrapper">
+    <div *ngIf="model" class="grid-control card-container" [@animationState]="'active'">
+        <div class="card-header-wrapper">
+            <h4 class="card-title"> {{ titleLabel }} </h4>
+            <div class="card-buttons">
+                <button kendoButton [disabled]="!hasChanges" (click)="save()" themeColor="info"> {{saveLabel}} </button>
+                <button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+            </div>
+        </div>
+
+        <div class="card-component">
+
+            <form #form="ngForm" novalidate class="content">
+
+                <kendo-grid #table
+                            [data]="availableCustomerPermissions"
+                            [resizable]="true">
+
+                    <ng-template kendoGridToolbarTemplate>
+                        <kendo-textbox [placeholder]="searchUserLabel" [style.width.em]="20"
+                                       name="searchUser" [(ngModel)]="searchUser" ignoreDirty
+                                       [clearButton]="true" (afterValueChanged)="onSearchUser($event)">
+                        </kendo-textbox>
+                        <kendo-textbox [placeholder]="searchPermissionLabel" [style.width.em]="20"
+                                       name="searchPermission" [(ngModel)]="searchPermission" ignoreDirty
+                                       [clearButton]="true" (afterValueChanged)="onSearchPermission($event)">
+                        </kendo-textbox>
+                        <kendo-grid-spacer></kendo-grid-spacer>
+                        <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                        <kendo-grid-column-chooser></kendo-grid-column-chooser>
+                    </ng-template>
+
+                    <kendo-grid-column [title]="permissionsLabel">
+                        <ng-template kendoGridCellTemplate let-pr="dataItem">
+                            {{pr.name}}
+                        </ng-template>
+                    </kendo-grid-column>
+
+                    <kendo-grid-column *ngFor="let cr of availableCustomers" [title]="cr.name"
+                                       [style]="{'text-align': 'center'}"
+                                       [headerStyle]="{'text-align': 'center'}">
+                        <ng-template kendoGridCellTemplate let-pr="dataItem">
+                            <input type="checkbox" [name]="'allow_' + cr.id + '_' + pr.systemName"
+                                   kendoCheckBox [(ngModel)]="model[pr.systemName][cr.id]" />
+                        </ng-template>
+                    </kendo-grid-column>
+
+                </kendo-grid>
+
+            </form>
+        </div>
+    </div>
+</div>

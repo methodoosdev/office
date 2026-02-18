@@ -1,0 +1,63 @@
+<div>
+
+    <div class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div class="k-gradient p-3 mb-3">
+        <form [formGroup]="searchForm" class="k-form k-form-vertical">
+            <formly-form [form]="searchForm" [model]="searchModel" [fields]="searchFields" [options]="searchOptions" (modelChange)="modelChangeEvent($event)"></formly-form>
+        </form>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <kendo-grid #table stickyHeader
+                    [resizable]="true"
+                    [data]="gridData"
+                    (excelExport)="onExcelExport($event)">
+            <ng-template kendoGridToolbarTemplate>
+
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+            </ng-template>
+
+            <ng-container *ngFor="let group of groupedColumns">
+                <kendo-grid-column-group [title]="group.title">
+                    <ng-container *ngFor="let column of group.columns">
+                        <kendo-grid-column [field]="column.field"
+                                           [title]="column.title"
+                                           [format]="column.format"
+                                           [sticky]="column.sticky"
+                                           [style]="column.style">
+                            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                                <ng-container [ngSwitch]="column.fieldType">
+                                    <span *ngSwitchCase="'date'" class="date-column">
+                                        {{dataItem[col.field] | kendoDate: "d"}}
+                                    </span>
+                                    <span *ngSwitchCase="'decimal'" class="decimal-column">
+                                        {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                                    </span>
+                                    <div *ngSwitchDefault>
+                                        {{dataItem[col.field]}}
+                                    </div>
+                                </ng-container>
+                            </ng-template>
+                        </kendo-grid-column>
+                    </ng-container>
+                </kendo-grid-column-group>
+            </ng-container>
+
+            <kendo-grid-excel fileName="payrollStatus.xlsx"></kendo-grid-excel>
+
+        </kendo-grid>
+
+    </div>
+
+</div>

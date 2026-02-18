@@ -1,0 +1,63 @@
+
+<div class="mb-3" *ngIf="model">
+    <kendo-toolbar>
+        <kendo-toolbar-button [text]="pdfLabel"
+                              icon="file-pdf"
+                              themeColor="base"
+                              [disabled]="false"
+                              (click)="pdf.saveAs('document.pdf')">
+        </kendo-toolbar-button>
+
+        <kendo-toolbar-spacer></kendo-toolbar-spacer>
+
+        <fontSize-tool [options]="fontSizeOptions"
+                       [text]="fontSizeText"
+                       (optionChange)="fontSizeChange($event)">
+        </fontSize-tool>
+
+        <landscape-tool [options]="landOptions"
+                        (optionChange)="landscapeChange($event)">
+        </landscape-tool>
+
+    </kendo-toolbar>
+</div>
+
+<kendo-pdf-export #pdf paperSize="A4" margin="0.5cm" [scale]="0.6" [landscape]="landscape">
+
+    <div class="pdf-wrap" *ngIf="model">
+        <section class="pdf-header-card">
+            <div class="pdf-brand-customer">
+
+                <div class="pdf-brand" aria-label="Company logo">
+                    <img src="assets/images/logo-seref.png" alt="topbar-logo">
+                </div>
+
+                <div class="pdf-customer">
+                    <h2 class="pdf-customer-name" id="pdf-customer-name">{{ info.traderName }}</h2>
+                    <div class="pdf-customer-address" aria-labelledby="pdf-customer-name">
+                        <div><span class="pdf-street">{{ info.address  }}</span></div>
+                        <div>
+                            <span class="pdf-postcode">{{ info.postcode }}</span>
+                            <span>&nbsp;</span>
+                            <span class="pdf-city">{{ info.city }}</span>
+                        </div>
+                        <div><span class="pdf-country">{{ info.phone }}</span></div>
+                        <div>
+                            <a class="pdf-email" href="mailto:john.smith@example.com">{{ info.email }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pdf-title-block">
+            <h5 class="pdf-doc-title">{{ docTitle }}</h5>
+        </section>
+
+    </div>
+
+    <form [formGroup]="form" class="k-form k-form-horizontal" [style.fontSize.px]="fontSize">
+        <formly-form [form]="form" [model]="model" [fields]="fields" [options]="options"></formly-form>
+    </form>
+
+</kendo-pdf-export>

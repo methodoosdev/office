@@ -1,0 +1,50 @@
+<kendo-grid #table
+            *ngIf="pivotData"
+            [data]="pivotData"
+            [sort]="state.sort"
+            [filter]="state.filter"
+            [sortable]="false"
+            [filterable]="false"
+            [resizable]="true">
+    <ng-template kendoGridToolbarTemplate>
+        <h6>{{title}}</h6>
+        <kendo-grid-spacer></kendo-grid-spacer>
+
+        <button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport">Excel</button>
+        <button kendoGridPDFCommand themeColor="warning" [disabled]="!canExport">Pdf</button>
+        <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing"></button>
+
+    </ng-template>
+    <kendo-grid-column *ngFor="let col of pivotColumns"
+                       [field]="col.field"
+                       [title]="col.title"
+                       [width]="col.width"
+                       [minResizableWidth]="col.minResizableWidth"
+                       [filter]="col.filter"
+                       [format]="col.format"
+                       [headerStyle]="{'justify-content': col.headerAlign}"
+                       [style]="{'text-align': col.textAlign}">
+        <ng-template *ngIf="this.showTypeId === 0" kendoGridFooterTemplate>
+            <div style="text-align: right;">
+                {{ getAggregate(col) }}
+            </div>
+        </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-excel fileName="excelGrid.xlsx"></kendo-grid-excel>
+    <kendo-grid-pdf fileName="printGrid.pdf"
+                    [allPages]="true"
+                    paperSize="A4"
+                    margin="1cm"
+                    [scale]="0.6"
+                    [repeatHeaders]="true">
+        <ng-template kendoGridPDFTemplate
+                     let-pageNum="pageNum"
+                     let-totalPages="totalPages">
+            <div class="page-template">
+                <div class="footer">{{ pageNum }} / {{ totalPages }}</div>
+            </div>
+        </ng-template>
+    </kendo-grid-pdf>
+
+</kendo-grid>

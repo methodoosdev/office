@@ -1,0 +1,27 @@
+<div *ngIf="model" class="form-control card-container" [@animationState]="animate ? 'active' : 'inactive'">
+    <div class="card-header-wrapper">
+        <h4 class="card-title"> {{ title }} </h4>
+        <div class="card-buttons">
+            <button *ngIf="customButtonVisible" kendoButton (click)="onCustomButtonClick()" [themeColor]="customButtonTheme"> {{ customButtonLabel }} </button>
+            <button *ngIf="saveButtonVisible" kendoButton [disabled]="!hasChanges" (click)="save(false)" themeColor="info"> {{saveLabel}} </button>
+            <button *ngIf="saveAndExitButtonVisible" kendoButton [disabled]="!hasChanges" (click)="saveAndExit()" themeColor="success"> {{saveAndExitLabel}} </button>
+            <button *ngIf="cancelButtonVisible" kendoButton [disabled]="!hasChanges" (click)="cancel()" themeColor="warning"> {{cancelLabel}} </button>
+            <button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+        </div>
+    </div>
+
+    <div class="card-toolbar" *ngIf="toolbarTemplate">
+        <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
+    </div>
+
+    <div class="card shadow card-component" [ngClass]="{'card': borderForm,'shadow': borderForm}">
+
+        <form novalidate #editForm="ngForm">
+
+            <ng-content></ng-content>
+            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+
+        </form>
+
+    </div>
+</div>

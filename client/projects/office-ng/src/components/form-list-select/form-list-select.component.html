@@ -1,0 +1,93 @@
+<div *ngIf="gridData">
+    <div class="grid-control card-container">
+        <div class="card-header-wrapper">
+            <ng-content></ng-content>
+        </div>
+
+        <div class="card-component">
+            <kendo-grid #table
+                        [data]="gridData"
+                        [pageSize]="take"
+                        [skip]="skip"
+                        [pageable]="pageable"
+                        [height]="searchModel.height"
+                        [kendoGridSelectBy]="searchModel.dataKey"
+                        [(selectedKeys)]="selectedKeys"
+                        [sortable]="{allowUnsort: false, mode: 'single'}"
+                        [sort]="sort"
+                        [groupable]="groupable"
+                        [group]="group"
+                        [reorderable]="true"
+                        [resizable]="true"
+                        [columnMenu]="false"
+                        [rowClass]="rowCallback"
+                        (dataStateChange)="onDataStateChange($event)">
+                <ng-template kendoGridToolbarTemplate>
+                    <div #wrapper kendoGridToolbarFocusable (keydown.enter)="textbox.focus()">
+                        <kendo-textbox #textbox
+                                       name="quickSearch"
+                                       [clearButton]="true"
+                                       [placeholder]="searchLabel"
+                                       [style.width.em]="20"
+                                       (click)="onQuickSearchClick($event)"
+                                       (keydown)="onQuickSearchKeydown($event, wrapper)"
+                                       (afterValueChanged)="onQuickSearchValueChange($event)">
+                        </kendo-textbox>
+                    </div>
+                    <div *ngIf="selectedKeys.length>0">({{ selectedKeys.length }}/{{ gridData.total }})</div>
+                    <kendo-grid-spacer></kendo-grid-spacer>
+
+                    <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                    <kendo-grid-column-chooser></kendo-grid-column-chooser>
+                </ng-template>
+                <kendo-grid-checkbox-column [width]="45"
+                                            [headerClass]="{ 'text-center': true }"
+                                            [class]="{ 'text-center': true }"
+                                            [resizable]="false"
+                                            [columnMenu]="false"
+                                            [showSelectAll]="showSelectAll">
+                </kendo-grid-checkbox-column>
+                <kendo-grid-column *ngFor="let col of searchModel.columns"
+                                   [field]="col.field"
+                                   [title]="col.title"
+                                   [format]="col.format"
+                                   [hidden]="col.hidden"
+                                   [media]="col.media"
+                                   [filter]="col.filterType"
+                                   [style]="col.style"
+                                   [headerStyle]="col.headerStyle">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <ng-container [ngSwitch]="col.fieldType">
+                            <span *ngSwitchCase="'checkbox'" class="checkbox-column">
+                                <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem[col.field], 'k-i-check-circle k-color-success': dataItem[col.field]}"></span>
+                                &nbsp;<span style="font-size:14px;">{{ dataItem[col.field] === true ? yesLabel : noLabel}}</span>
+                            </span>
+                            <div *ngSwitchCase="'row-button'" class="row-button-column">
+                                <button kendoButton size="small"
+                                        [ngStyle]="{'font-size': '12px'}"
+                                        [themeColor]="col.theme"
+                                        (click)="onColumnButtonClickEvent($event, col.field, dataItem)">
+                                    {{col.title}}
+                                </button>
+                            </div>
+                            <div *ngSwitchCase="'date'" class="date-column">
+                                {{dataItem[col.field] | kendoDate}}
+                            </div>
+                            <div *ngSwitchCase="'numeric'" class="numeric-column">
+                                {{dataItem[col.field] | kendoNumber: '#,##0'}}
+                            </div>
+                            <div *ngSwitchCase="'decimal'" class="decimal-column">
+                                {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                            </div>
+                            <div *ngSwitchDefault>
+                                {{dataItem[col.field]}}
+                            </div>
+                        </ng-container>
+                    </ng-template>
+                    <ng-template kendoGridGroupHeaderTemplate let-value="value"> {{value}} </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+        </div>
+    </div>
+</div>
+

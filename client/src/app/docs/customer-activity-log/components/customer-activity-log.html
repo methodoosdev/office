@@ -1,0 +1,5 @@
+<div *ngIf="content" class="log-layout-page">
+
+    <div [innerHtml]="content | safe: 'html'" style="margin: 10px;"></div>
+
+</div>

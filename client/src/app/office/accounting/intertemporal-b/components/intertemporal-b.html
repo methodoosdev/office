@@ -1,0 +1,90 @@
+<div>
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div class="k-gradient p-3 mb-3">
+        <form [formGroup]="searchForm" class="k-form k-form-vertical">
+            <formly-form [form]="searchForm" [model]="searchModel" [fields]="searchFields" [options]="searchOptions" (modelChange)="modelChangeEvent($event)"></formly-form>
+        </form>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <kendo-pivotgrid [kendoPivotLocalBinding]="gridData"
+                         [dimensions]="dimensions"
+                         [measures]="measures"
+                         [rowAxes]="defaultRowAxes"
+                         [columnAxes]="defaultColumnAxes"
+                         [measureAxes]="defaultMeasureAxes"
+                         [columnHeadersWidth]="100"
+                         [configurator]="false">
+            <ng-template kendoPivotGridRowHeaderCellTemplate
+                         let-text="text"
+                         let-rowIndex="rowIndex"
+                         let-columnIndex="columnIndex"
+                         let-tableType="tableType"
+                         let-expanded="expanded"
+                         let-dataItem>
+                {{text}}
+            </ng-template>
+            <ng-template kendoPivotGridValueCellTemplate
+                         let-value="value"
+                         let-rowIndex="rowIndex"
+                         let-columnIndex="columnIndex"
+                         let-tableType="tableType"
+                         let-expanded="expanded"
+                         let-dataItem>
+                {{ formatNumber(value) }}
+            </ng-template>
+        </kendo-pivotgrid>
+
+        <kendo-expansionpanel *ngIf="resultModel" [title]="resultFormTitle" [expanded]="true" class="result-model-form k-expansionpanel-form" style="margin-top: 1rem;">
+            <!--<div class="expansionpanel-buttons">
+                <button kendoButton (click)="resultModelExportToPdf()" themeColor="warning" size="small"> Pdf </button>
+            </div>-->
+            <div style="padding: 16px;">
+
+                <form [formGroup]="resultForm" class="k-form k-form-horizontal">
+                    <formly-form [form]="resultForm" [model]="resultModel" [fields]="resultFields" [options]="resultOptions"></formly-form>
+                </form>
+
+            </div>
+
+        </kendo-expansionpanel>
+
+        <kendo-expansionpanel *ngIf="remodelingCostsData" [title]="remodelingCostsTableTitle" class="k-expansionpanel-grid" style="margin-top: 1rem;">
+
+            <kendo-grid #remodelingCostsTable [resizable]="true" [data]="remodelingCostsData">
+                <ng-template kendoGridToolbarTemplate>
+                    <kendo-grid-spacer></kendo-grid-spacer>
+                    <button kendoButton (click)="remodelingCostsTable.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                </ng-template>
+                <kendo-grid-column *ngFor="let column of remodelingCostsColumns"
+                                   [field]="column.field"
+                                   [title]="column.title"
+                                   [format]="column.format"
+                                   [style]="column.style">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                        <ng-container [ngSwitch]="column.fieldType">
+                            <div *ngSwitchCase="'decimal'" class="decimal-column">
+                                {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                            </div>
+                            <div *ngSwitchDefault>
+                                {{dataItem[col.field]}}
+                            </div>
+                        </ng-container>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+
+        </kendo-expansionpanel>
+
+    </div>
+
+</div>

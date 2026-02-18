@@ -1,0 +1,64 @@
+<app-layout>
+
+    <div class="layout-topbar-end">
+        <div class="layout-topbar-actions-end">
+            <ul class="layout-topbar-items gap-6">
+                <li>
+                    <a style="display:flex;flex-direction: column;" pStyleClass="@next" enterClass="ng-hidden" enterActiveClass="px-scalein"
+                       leaveToClass="ng-hidden" leaveActiveClass="px-fadeout" [hideOnOutsideClick]="true" pRipple>
+                        <i class="pi pi-cog"></i>
+                        <span>{{ settingsLabel }}</span>
+                    </a>
+                    <div class="ng-hidden">
+                        <ul class="list-none p-0 m-0 flex flex-column text-color">
+                            <li>
+                                <a href="#" class="cursor-pointer flex align-items-center px-3 py-2 gap-3 hover:text-primary" (click)="changeLanguage($event, 'el-GR')">
+                                    <img src="assets/images/flags/gr.png" alt="flag" />
+                                    <span>{{ greekMenuLabel }}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="cursor-pointer flex align-items-center px-3 py-2 gap-3 hover:text-primary" (click)="changeLanguage($event, 'en-US')">
+                                    <img src="assets/images/flags/us.png" alt="flag" />
+                                    <span>{{ usMenuLabel }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </li>
+                <li>
+                    <a style="display:flex;flex-direction: column;" pStyleClass="@next" enterClass="ng-hidden" enterActiveClass="px-scalein"
+                       leaveToClass="ng-hidden" leaveActiveClass="px-fadeout" [hideOnOutsideClick]="true" pRipple>
+                        <i class="pi pi-user"></i>
+                        <span>{{ nickNameLabel }}</span>
+                    </a>
+                    <div class="ng-hidden">
+                        <ul class="list-none p-0 m-0">
+                            <li *hasAuthUserViewPermission="roles">
+                                <a [routerLink]="['/office/accounting-office',1]" class="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
+                                    <i class="pi pi-fw pi-wrench text-lg"></i>
+                                    <span>Office</span>
+                                </a>
+                            </li>
+                            <li *hasAuthUserViewPermission="roles">
+                                <a href="#" (click)="clearCache($event)" class="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary ">
+                                    <i class="pi pi-fw pi-times text-lg"></i>
+                                    <span>Clear cache</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['/auth/login']" class="py-2 px-3 flex gap-2 cursor-pointer text-color hover:text-primary">
+                                    <i class="pi pi-fw pi-sign-out text-lg"></i>
+                                    <span>{{ logoutLabel }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</app-layout>

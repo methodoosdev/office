@@ -1,0 +1,122 @@
+<div>
+
+	<div stickyToolbar class="main-toolbar">
+		<div class="main-toolbar-group-left main-toolbar-group-start">
+			<div class="main-toolbar-title"> {{ title }} </div>
+		</div>
+		<div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+			<button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+		</div>
+	</div>
+
+	<div class="k-gradient p-3 mb-3">
+		<form [formGroup]="searchForm" class="k-form k-form-vertical">
+			<formly-form [form]="searchForm" [model]="searchModel" [fields]="searchFields" [options]="searchOptions" (modelChange)="modelChangeEvent($event)"></formly-form>
+		</form>
+	</div>
+
+	<div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+		<kendo-grid #table
+					[group]="groups"
+					[resizable]="true" [data]="gridData">
+			<ng-template kendoGridToolbarTemplate>
+				<kendo-grid-spacer></kendo-grid-spacer>
+				<button kendoGridExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+				<button kendoButton (click)="table.saveAsPDF()" themeColor="warning" [disabled]="!canExport"> Pdf </button>
+				<button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+			</ng-template>
+			<kendo-grid-column *ngFor="let column of columns"
+							   [field]="column.field"
+							   [title]="column.title"
+							   [format]="column.format"
+							   [hidden]="column.hidden"
+							   [headerStyle]="column.headerStyle"
+							   [style]="column.style">
+				<ng-template kendoGridGroupHeaderTemplate let-group="group">
+					<span *ngIf="column.field=='payoffLiabilityCategoryTypeName'">
+						{{ group.value }}
+					</span>
+				</ng-template>
+				<ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+					<ng-container [ngSwitch]="column.fieldType">
+						<div *ngSwitchCase="'checkbox'" class="checkbox-column">
+							<i class="fa fa-fw fa-lg" [ngClass]="{'fa-check': dataItem[col.field], 'fa-times': !dataItem[col.field]}"></i>
+						</div>
+						<div *ngSwitchCase="'decimal'" class="decimal-column">
+							{{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+						</div>
+						<div *ngSwitchDefault>
+							{{dataItem[col.field]}}
+						</div>
+					</ng-container>
+				</ng-template>
+			</kendo-grid-column>
+			<kendo-grid-excel fileName="payoffLiabilities.xlsx"></kendo-grid-excel>
+			<kendo-grid-pdf fileName="payoffLiabilities.pdf"
+							[allPages]="true"
+							paperSize="A4"
+							margin="1cm"
+							[scale]="0.6"
+							[landscape]="true"
+							[repeatHeaders]="true">
+				<ng-template kendoGridPDFTemplate
+							 let-pageNum="pageNum"
+							 let-totalPages="totalPages">
+					<div class="page-template">
+						<div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+					</div>
+				</ng-template>
+			</kendo-grid-pdf>
+		</kendo-grid>
+
+		<div style="margin-top: 1rem;">
+
+			<kendo-grid #factorTable
+						[resizable]="true" [data]="factorGridData">
+				<ng-template kendoGridToolbarTemplate>
+					<div style="font-weight: 600;">{{ factorTitle }}</div>
+					<kendo-grid-spacer></kendo-grid-spacer>
+					<button kendoGridExcelCommand themeColor="warning" [disabled]="!canFactorExport"> Excel </button>
+					<button kendoButton (click)="factorTable.saveAsPDF()" themeColor="warning" [disabled]="!canFactorExport"> Pdf </button>
+					<button kendoButton (click)="factorTable.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+				</ng-template>
+				<kendo-grid-column *ngFor="let column of factorColumns"
+								   [field]="column.field"
+								   [title]="column.title"
+								   [format]="column.format"
+								   [headerStyle]="column.headerStyle"
+								   [style]="column.style">
+					<ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+						<ng-container [ngSwitch]="column.fieldType">
+							<div *ngSwitchCase="'decimal'" class="decimal-column">
+								{{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+							</div>
+							<div *ngSwitchDefault>
+								{{dataItem[col.field]}}
+							</div>
+						</ng-container>
+					</ng-template>
+				</kendo-grid-column>
+				<kendo-grid-excel fileName="payoffLiabilitiesFactor.xlsx"></kendo-grid-excel>
+				<kendo-grid-pdf fileName="payoffLiabilitiesFactor.pdf"
+								[allPages]="true"
+								paperSize="A4"
+								margin="1cm"
+								[scale]="0.6"
+								[landscape]="true"
+								[repeatHeaders]="true">
+					<ng-template kendoGridPDFTemplate
+								 let-pageNum="pageNum"
+								 let-totalPages="totalPages">
+						<div class="page-template">
+							<div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+						</div>
+					</ng-template>
+				</kendo-grid-pdf>
+			</kendo-grid>
+		</div>
+
+	</div>
+</div>
+

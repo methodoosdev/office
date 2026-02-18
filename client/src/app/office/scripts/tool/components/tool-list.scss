@@ -1,0 +1,147 @@
+
+formly-field.k-gradient {
+    display: block;
+    border: 1px solid #e0e0e0;
+}
+
+.repeat-scroll {
+    overflow-x: auto;
+}
+
+.repeat-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.repeat-section.header {
+    font-weight: bold;
+    border-bottom: 2px solid #9e9e9e;
+    padding-bottom: 4px;
+}
+/*.repeat-section > :not(:first-child) {
+            margin-left: 6px;
+        }*/
+.repeat-section > * {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.repeat-label.left {
+    flex: 0 0 10%;
+    max-width: 10%;
+    font-weight: bold;
+}
+
+.repeat-label.right {
+    flex: 0 0 48%;
+    max-width: 48%;
+}
+
+.repeat-label.input {
+    flex: 0 0 21%;
+    max-width: 21%;
+}
+
+.repeat-label.input > * {
+    width: 100%;
+}
+
+.repeat-label.input .k-textbox.k-input {
+    font-weight: bold;
+    text-align: center;
+}
+
+.repeat-label.input .k-input-inner {
+    text-align: right;
+}
+
+.repeat-label.left,
+.repeat-label.right {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+kendo-pdf-export .k-form [class*=col-] {
+    padding-top: 2px !important;
+}
+
+.pdf-header-card {
+    padding: 0.5rem 1.5rem 1rem;
+}
+
+.pdf-brand-customer {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.pdf-brand {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.pdf-brand img, .pdf-brand svg {
+    max-height: 72px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.pdf-customer {
+    flex: 1 1 auto;
+    margin-left: auto;
+    text-align: right;
+}
+
+.pdf-customer-name {
+    margin: 0 0 .25rem 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: .01em;
+}
+
+.pdf-customer-address {
+    font-style: normal;
+    line-height: 1.45;
+    margin: 0;
+}
+
+.pdf-email {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px dotted currentColor;
+}
+
+.pdf-email:hover {
+    text-decoration: underline;
+}
+
+
+/* Stack on small screens */
+@media (max-width: 640px) {
+    .pdf-brand-customer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pdf-customer {
+        text-align: left;
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+/* Optional: nicer print without global body rules */
+@media print {
+    .pdf-header-card {
+        border: none;
+        padding: 0;
+    }
+}
+
+.pdf-doc-title {
+    text-align: center;
+}

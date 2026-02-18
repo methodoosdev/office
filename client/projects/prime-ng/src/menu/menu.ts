@@ -1,0 +1,760 @@
+import {
+    NgModule,
+    Component,
+    ElementRef,
+    OnDestroy,
+    Input,
+    Output,
+    EventEmitter,
+    Renderer2,
+    Inject,
+    forwardRef,
+    ChangeDetectorRef,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+    ViewRef,
+    PLATFORM_ID,
+    TemplateRef,
+    Pipe,
+    PipeTransform,
+    ViewChild,
+    signal,
+    computed
+} from '@angular/core';
+import { trigger, style, transition, animate, AnimationEvent } from '@angular/animations';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { DomHandler } from '../dom/domhandler';
+import { ConnectedOverlayScrollHandler } from '../dom/connectedoverlayscrollhandler';
+import { MenuItem, OverlayService, PrimeNGConfig } from '../api/public_api';
+import { UniqueComponentId, ZIndexUtils } from '../utils/public_api';
+import { RouterModule } from '@angular/router';
+import { RippleModule } from '../ripple/ripple';
+import { TooltipModule } from '../tooltip/tooltip';
+import { Nullable, VoidListener } from '../ts-helpers/ts-helpers';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
+@Pipe({
+    name: 'safeHtml'
+})
+export class SafeHtmlPipe implements PipeTransform {
+    constructor(@Inject(PLATFORM_ID) private readonly platformId: any, private readonly sanitizer: DomSanitizer) {}
+
+    public transform(value: string): SafeHtml {
+        if (!value || !isPlatformBrowser(this.platformId)) {
+            return value;
+        }
+
+        return this.sanitizer.bypassSecurityTrustHtml(value);
+    }
+}
+
+@Component({
+    selector: '[pMenuItemContent]',
+    template: `
+        <div [attr.data-pc-section]="'content'" class="p-menuitem-content">
+            <a
+                *ngIf="!item?.routerLink"
+                [attr.title]="item.title"
+                [attr.href]="item.url || null"
+                [attr.data-automationid]="item.automationId"
+                [attr.tabindex]="-1"
+                [attr.data-pc-section]="'action'"
+                [attr.aria-hidden]="true"
+                class="p-menuitem-link"
+                [target]="item.target"
+                [ngClass]="{ 'p-disabled': item.disabled }"
+                (click)="onItemClick($event, item)"
+                pRipple
+            >
+                <ng-container *ngTemplateOutlet="itemContent"></ng-container>
+            </a>
+            <a
+                *ngIf="item?.routerLink"
+                [routerLink]="item.routerLink"
+                [attr.data-automationid]="item.automationId"
+                [attr.tabindex]="-1"
+                [attr.data-pc-section]="'action'"
+                [attr.aria-hidden]="true"
+                [attr.title]="item.title"
+                [queryParams]="item.queryParams"
+                routerLinkActive="p-menuitem-link-active"
+                [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
+                class="p-menuitem-link"
+                [target]="item.target"
+                [ngClass]="{ 'p-disabled': item.disabled }"
+                (click)="onItemClick($event, item)"
+                [fragment]="item.fragment"
+                [queryParamsHandling]="item.queryParamsHandling"
+                [preserveFragment]="item.preserveFragment"
+                [skipLocationChange]="item.skipLocationChange"
+                [replaceUrl]="item.replaceUrl"
+                [state]="item.state"
+                pRipple
+            >
+                <ng-container *ngTemplateOutlet="itemContent"></ng-container>
+            </a>
+
+            <ng-template #itemContent>
+                <span class="p-menuitem-icon" *ngIf="item.icon" [ngClass]="item.icon" [class]="item.iconClass" [ngStyle]="item.iconStyle"></span>
+                <span class="p-menuitem-text" *ngIf="item.escape !== false; else htmlLabel">{{ item.label }}</span>
+                <ng-template #htmlLabel><span class="p-menuitem-text" [innerHTML]="item.label | safeHtml"></span></ng-template>
+                <span class="p-menuitem-badge" *ngIf="item.badge" [ngClass]="item.badgeStyleClass">{{ item.badge }}</span>
+            </ng-template>
+        </div>
+    `,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'p-element'
+    }
+})
+export class MenuItemContent {
+    @Input('pMenuItemContent') item: MenuItem | undefined;
+
+    @Input('id') id: string;
+
+    @Output() onMenuItemClick: EventEmitter<any> = new EventEmitter<any>();
+
+    menu: Menu;
+
+    constructor(@Inject(forwardRef(() => Menu)) menu: Menu) {
+        this.menu = menu as Menu;
+    }
+
+    onItemClick(event, item) {
+        this.onMenuItemClick.emit({ originalEvent: event, item: { ...item, id: this.id } });
+    }
+}
+/**
+ * Menu is a navigation / command component that supports dynamic and static positioning.
+ * @group Components
+ */
+@Component({
+    selector: 'p-menu',
+    template: `
+        <div
+            #container
+            [ngClass]="{ 'p-menu p-component': true, 'p-menu-overlay': popup }"
+            [class]="styleClass"
+            [ngStyle]="style"
+            *ngIf="!popup || visible"
+            (click)="onOverlayClick($event)"
+            [@overlayAnimation]="{ value: 'visible', params: { showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions } }"
+            [@.disabled]="popup !== true"
+            (@overlayAnimation.start)="onOverlayAnimationStart($event)"
+            (@overlayAnimation.done)="onOverlayAnimationEnd($event)"
+            [attr.data-pc-name]="'menu'"
+            [id]="id"
+        >
+            <ul
+                #list
+                class="p-menu-list p-reset"
+                role="menu"
+                [id]="id + '_list'"
+                [tabindex]="tabindex"
+                [attr.data-pc-section]="'menu'"
+                [attr.aria-activedescendant]="activedescendant()"
+                [attr.aria-label]="ariaLabel"
+                [attr.aria-labelledBy]="ariaLabelledBy"
+                (focus)="onListFocus($event)"
+                (blur)="onListBlur($event)"
+                (keydown)="onListKeyDown($event)"
+            >
+                <ng-template ngFor let-submenu let-i="index" [ngForOf]="model" *ngIf="hasSubMenu()">
+                    <li class="p-menu-separator" *ngIf="submenu.separator" [ngClass]="{ 'p-hidden': submenu.visible === false }" role="separator"></li>
+                    <li
+                        class="p-submenu-header"
+                        [attr.data-automationid]="submenu.automationId"
+                        *ngIf="!submenu.separator"
+                        [ngClass]="{ 'p-hidden': submenu.visible === false, flex: submenu.visible }"
+                        pTooltip
+                        [tooltipOptions]="submenu.tooltipOptions"
+                        role="none"
+                        [attr.id]="menuitemId(id, i)"
+                    >
+                        <span *ngIf="submenu.escape !== false; else htmlSubmenuLabel">{{ submenu.label }}</span>
+                        <ng-template #htmlSubmenuLabel><span [innerHTML]="submenu.label | safeHtml"></span></ng-template>
+                    </li>
+                    <ng-template ngFor let-item let-j="index" [ngForOf]="submenu.items">
+                        <li class="p-menu-separator" *ngIf="item.separator" [ngClass]="{ 'p-hidden': item.visible === false || submenu.visible === false }" role="separator"></li>
+                        <li
+                            class="p-menuitem"
+                            *ngIf="!item.separator"
+                            [pMenuItemContent]="item"
+                            [ngClass]="{ 'p-hidden': item.visible === false || submenu.visible === false, 'p-focus': focusedOptionId() && menuitemId(id, i, j) === focusedOptionId(), 'p-disabled': disabled(item.disabled) }"
+                            [ngStyle]="item.style"
+                            [class]="item.styleClass"
+                            (onMenuItemClick)="itemClick($event)"
+                            pTooltip
+                            [tooltipOptions]="item.tooltipOptions"
+                            role="menuitem"
+                            [attr.data-pc-section]="'menuitem'"
+                            [attr.aria-label]="label(item.label)"
+                            [attr.data-p-focused]="isItemFocused(menuitemId(id, i, j))"
+                            [attr.data-p-disabled]="disabled(item.disabled)"
+                            [attr.aria-disabled]="disabled(item.disabled)"
+                            [attr.id]="menuitemId(id, i, j)"
+                            [id]="menuitemId(id, i, j)"
+                        ></li>
+                    </ng-template>
+                </ng-template>
+                <ng-template ngFor let-item let-i="index" [ngForOf]="model" *ngIf="!hasSubMenu()">
+                    <li class="p-menu-separator" *ngIf="item.separator" [ngClass]="{ 'p-hidden': item.visible === false }" role="separator"></li>
+                    <li
+                        class="p-menuitem"
+                        *ngIf="!item.separator"
+                        [pMenuItemContent]="item"
+                        [ngClass]="{ 'p-hidden': item.visible === false, 'p-focus': focusedOptionId() && menuitemId(id, i) === focusedOptionId(), 'p-disabled': disabled(item.disabled) }"
+                        [ngStyle]="item.style"
+                        [class]="item.styleClass"
+                        (onMenuItemClick)="itemClick($event)"
+                        pTooltip
+                        [tooltipOptions]="item.tooltipOptions"
+                        role="menuitem"
+                        [attr.data-pc-section]="'menuitem'"
+                        [attr.aria-label]="label(item.label)"
+                        [attr.data-p-focused]="isItemFocused(menuitemId(id, i))"
+                        [attr.data-p-disabled]="disabled(item.disabled)"
+                        [attr.aria-disabled]="disabled(item.disabled)"
+                        [attr.id]="menuitemId(id, i)"
+                        [id]="menuitemId(id, i)"
+                    ></li>
+                </ng-template>
+            </ul>
+        </div>
+    `,
+    animations: [trigger('overlayAnimation', [transition(':enter', [style({ opacity: 0, transform: 'scaleY(0.8)' }), animate('{{showTransitionParams}}')]), transition(':leave', [animate('{{hideTransitionParams}}', style({ opacity: 0 }))])])],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['./menu.css'],
+    host: {
+        class: 'p-element'
+    }
+})
+export class Menu implements OnDestroy {
+    /**
+     * An array of menuitems.
+     * @group Props
+     */
+    @Input() model: MenuItem[] | undefined;
+    /**
+     * Defines if menu would displayed as a popup.
+     * @group Props
+     */
+    @Input() popup: boolean | undefined;
+    /**
+     * Inline style of the component.
+     * @group Props
+     */
+    @Input() style: { [klass: string]: any } | null | undefined;
+    /**
+     * Style class of the component.
+     * @group Props
+     */
+    @Input() styleClass: string | undefined;
+    /**
+     * Target element to attach the overlay, valid values are "body" or a local ng-template variable of another element (note: use binding with brackets for template variables, e.g. [appendTo]="mydiv" for a div element having #mydiv as variable name).
+     * @group Props
+     */
+    @Input() appendTo: HTMLElement | ElementRef | TemplateRef<any> | string | null | undefined | any;
+    /**
+     * Whether to automatically manage layering.
+     * @group Props
+     */
+    @Input() autoZIndex: boolean = true;
+    /**
+     * Base zIndex value to use in layering.
+     * @group Props
+     */
+    @Input() baseZIndex: number = 0;
+    /**
+     * Transition options of the show animation.
+     * @group Props
+     */
+    @Input() showTransitionOptions: string = '.12s cubic-bezier(0, 0, 0.2, 1)';
+    /**
+     * Transition options of the hide animation.
+     * @group Props
+     */
+    @Input() hideTransitionOptions: string = '.1s linear';
+    /**
+     * Defines a string value that labels an interactive element.
+     * @group Props
+     */
+    @Input() ariaLabel: string | undefined;
+    /**
+     * Identifier of the underlying input element.
+     * @group Props
+     */
+    @Input() ariaLabelledBy: string | undefined;
+    /**
+     * Current id state as a string.
+     * @group Props
+     */
+    @Input() id: string | undefined;
+    /**
+     * Index of the element in tabbing order.
+     * @group Props
+     */
+    @Input() tabindex: number = 0;
+    /**
+     * Callback to invoke when overlay menu is shown.
+     * @group Emits
+     */
+    @Output() onShow: EventEmitter<any> = new EventEmitter<any>();
+    /**
+     * Callback to invoke when overlay menu is hidden.
+     * @group Emits
+     */
+    @Output() onHide: EventEmitter<any> = new EventEmitter<any>();
+    /**
+     * Callback to invoke when the list loses focus.
+     * @param {Event} event - blur event.
+     * @group Emits
+     */
+    @Output() onBlur: EventEmitter<Event> = new EventEmitter<Event>();
+    /**
+     * Callback to invoke when the list receives focus.
+     * @param {Event} event - focus event.
+     * @group Emits
+     */
+    @Output() onFocus: EventEmitter<Event> = new EventEmitter<Event>();
+
+    @ViewChild('list') listViewChild: Nullable<ElementRef>;
+
+    @ViewChild('container') containerViewChild: Nullable<ElementRef>;
+
+    container: HTMLDivElement | undefined;
+
+    scrollHandler: ConnectedOverlayScrollHandler | null | undefined;
+
+    documentClickListener: VoidListener;
+
+    documentResizeListener: VoidListener;
+
+    preventDocumentDefault: boolean | undefined;
+
+    target: any;
+
+    visible: boolean | undefined;
+
+    focusedOptionId = computed(() => {
+        return this.focusedOptionIndex() !== -1 ? this.focusedOptionIndex() : null;
+    });
+
+    public focusedOptionIndex: any = signal<any>(-1);
+
+    public selectedOptionIndex: any = signal<any>(-1);
+
+    public focused: boolean | undefined = false;
+
+    public overlayVisible: boolean | undefined = false;
+
+    relativeAlign: boolean | undefined;
+
+    constructor(
+        @Inject(DOCUMENT) private document: Document,
+        @Inject(PLATFORM_ID) private platformId: any,
+        public el: ElementRef,
+        public renderer: Renderer2,
+        private cd: ChangeDetectorRef,
+        public config: PrimeNGConfig,
+        public overlayService: OverlayService
+    ) {
+        this.id = this.id || UniqueComponentId();
+    }
+    /**
+     * Toggles the visibility of the popup menu.
+     * @param {Event} event - Browser event.
+     * @group Method
+     */
+    public toggle(event: Event) {
+        if (this.visible) this.hide();
+        else this.show(event);
+
+        this.preventDocumentDefault = true;
+    }
+    /**
+     * Displays the popup menu.
+     * @param {Event} event - Browser event.
+     * @group Method
+     */
+    public show(event: any) {
+        this.target = event.currentTarget;
+        this.relativeAlign = event.relativeAlign;
+        this.visible = true;
+        this.preventDocumentDefault = true;
+        this.overlayVisible = true;
+        this.cd.markForCheck();
+    }
+
+    ngOnInit() {
+        if (!this.popup) {
+            this.bindDocumentClickListener();
+        }
+    }
+
+    onOverlayAnimationStart(event: AnimationEvent) {
+        switch (event.toState) {
+            case 'visible':
+                if (this.popup) {
+                    this.container = event.element;
+                    this.moveOnTop();
+                    this.onShow.emit({});
+                    this.appendOverlay();
+                    this.alignOverlay();
+                    this.bindDocumentClickListener();
+                    this.bindDocumentResizeListener();
+                    this.bindScrollListener();
+                    DomHandler.focus(this.listViewChild.nativeElement);
+                    this.changeFocusedOptionIndex(0);
+                }
+                break;
+
+            case 'void':
+                this.onOverlayHide();
+                this.onHide.emit({});
+                break;
+        }
+    }
+
+    onOverlayAnimationEnd(event: AnimationEvent) {
+        switch (event.toState) {
+            case 'void':
+                if (this.autoZIndex) {
+                    ZIndexUtils.clear(event.element);
+                }
+                break;
+        }
+    }
+
+    alignOverlay() {
+        if (this.relativeAlign) DomHandler.relativePosition(this.container, this.target);
+        else DomHandler.absolutePosition(this.container, this.target);
+    }
+
+    appendOverlay() {
+        if (this.appendTo) {
+            if (this.appendTo === 'body') this.renderer.appendChild(this.document.body, this.container);
+            else DomHandler.appendChild(this.container, this.appendTo);
+        }
+    }
+
+    restoreOverlayAppend() {
+        if (this.container && this.appendTo) {
+            this.renderer.appendChild(this.el.nativeElement, this.container);
+        }
+    }
+
+    moveOnTop() {
+        if (this.autoZIndex) {
+            ZIndexUtils.set('menu', this.container, this.baseZIndex + this.config.zIndex.menu);
+        }
+    }
+    /**
+     * Hides the popup menu.
+     * @group Method
+     */
+    public hide() {
+        this.visible = false;
+        this.relativeAlign = false;
+        this.cd.markForCheck();
+    }
+
+    onWindowResize() {
+        if (this.visible && !DomHandler.isTouchDevice()) {
+            this.hide();
+        }
+    }
+
+    menuitemId(id: string, index?: number, childIndex?: number) {
+        return `${id}_${index}${typeof childIndex !== 'undefined' ? '_' + childIndex : ''}`;
+    }
+
+    isItemFocused(id) {
+        return this.focusedOptionId() === id;
+    }
+
+    label(label: any) {
+        return typeof label === 'function' ? label() : label;
+    }
+
+    disabled(disabled: any) {
+        return typeof disabled === 'function' ? disabled() : typeof disabled === 'undefined' ? false : disabled;
+    }
+
+    activedescendant() {
+        return this.focused ? this.focusedOptionId() : undefined;
+    }
+
+    onListFocus(event: Event) {
+        this.focused = true;
+        if (!this.popup) {
+            if (this.selectedOptionIndex() !== -1) {
+                this.changeFocusedOptionIndex(this.selectedOptionIndex());
+                this.selectedOptionIndex.set(-1);
+            } else {
+                this.changeFocusedOptionIndex(0);
+            }
+        }
+        this.onFocus.emit(event);
+    }
+
+    onListBlur(event: FocusEvent | MouseEvent) {
+        this.focused = false;
+        this.changeFocusedOptionIndex(-1);
+        this.selectedOptionIndex.set(null);
+        this.focusedOptionIndex.set(null);
+        this.onBlur.emit(event);
+    }
+
+    onListKeyDown(event) {
+        switch (event.code) {
+            case 'ArrowDown':
+                this.onArrowDownKey(event);
+                break;
+
+            case 'ArrowUp':
+                this.onArrowUpKey(event);
+                break;
+
+            case 'Home':
+                this.onHomeKey(event);
+                break;
+
+            case 'End':
+                this.onEndKey(event);
+                break;
+
+            case 'Enter':
+                this.onEnterKey(event);
+                break;
+
+            case 'Space':
+                this.onSpaceKey(event);
+                break;
+
+            case 'Escape':
+                if (this.popup) {
+                    DomHandler.focus(this.target);
+                    this.hide();
+                }
+                break;
+
+            case 'Tab':
+                this.overlayVisible && this.hide();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    onArrowDownKey(event) {
+        const optionIndex = this.findNextOptionIndex(this.focusedOptionIndex());
+        this.changeFocusedOptionIndex(optionIndex);
+        event.preventDefault();
+    }
+
+    onArrowUpKey(event) {
+        if (event.altKey && this.popup) {
+            DomHandler.focus(this.target);
+            this.hide();
+            event.preventDefault();
+        } else {
+            const optionIndex = this.findPrevOptionIndex(this.focusedOptionIndex());
+
+            this.changeFocusedOptionIndex(optionIndex);
+            event.preventDefault();
+        }
+    }
+
+    onHomeKey(event) {
+        this.changeFocusedOptionIndex(0);
+        event.preventDefault();
+    }
+
+    onEndKey(event) {
+        this.changeFocusedOptionIndex(DomHandler.find(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]').length - 1);
+        event.preventDefault();
+    }
+
+    onEnterKey(event) {
+        const element = DomHandler.findSingle(this.containerViewChild.nativeElement, `li[id="${`${this.focusedOptionIndex()}`}"]`);
+        const anchorElement = element && DomHandler.findSingle(element, 'a[data-pc-section="action"]');
+
+        this.popup && DomHandler.focus(this.target);
+        anchorElement ? anchorElement.click() : element && element.click();
+
+        event.preventDefault();
+    }
+
+    onSpaceKey(event) {
+        this.onEnterKey(event);
+    }
+
+    findNextOptionIndex(index) {
+        const links = DomHandler.find(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
+        const matchedOptionIndex = [...links].findIndex((link) => link.id === index);
+
+        return matchedOptionIndex > -1 ? matchedOptionIndex + 1 : 0;
+    }
+
+    findPrevOptionIndex(index) {
+        const links = DomHandler.find(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
+        const matchedOptionIndex = [...links].findIndex((link) => link.id === index);
+
+        return matchedOptionIndex > -1 ? matchedOptionIndex - 1 : 0;
+    }
+
+    changeFocusedOptionIndex(index) {
+        const links = DomHandler.find(this.containerViewChild.nativeElement, 'li[data-pc-section="menuitem"][data-p-disabled="false"]');
+
+        let order = index >= links.length ? links.length - 1 : index < 0 ? 0 : index;
+        order > -1 && this.focusedOptionIndex.set(links[order].getAttribute('id'));
+    }
+
+    itemClick(event: any) {
+        const { originalEvent, item } = event;
+
+        if (item.disabled) {
+            originalEvent.preventDefault();
+            return;
+        }
+
+        if (!item.url && !item.routerLink) {
+            originalEvent.preventDefault();
+        }
+
+        if (item.command) {
+            item.command({
+                originalEvent: originalEvent,
+                item: item
+            });
+        }
+
+        if (this.popup) {
+            this.hide();
+        }
+
+        if (!this.popup && this.focusedOptionIndex() !== item.id) {
+            this.focusedOptionIndex.set(item.id);
+        }
+    }
+
+    onOverlayClick(event: Event) {
+        if (this.popup) {
+            this.overlayService.add({
+                originalEvent: event,
+                target: this.el.nativeElement
+            });
+        }
+
+        this.preventDocumentDefault = true;
+    }
+
+    bindDocumentClickListener() {
+        if (!this.documentClickListener && isPlatformBrowser(this.platformId)) {
+            const documentTarget: any = this.el ? this.el.nativeElement.ownerDocument : 'document';
+
+            this.documentClickListener = this.renderer.listen(documentTarget, 'click', (event) => {
+                const isOutsideContainer = this.containerViewChild.nativeElement && !this.containerViewChild.nativeElement.contains(event.target);
+                const isOutsideTarget = !(this.target && (this.target === event.target || this.target.contains(event.target)));
+                if (!this.popup && isOutsideContainer && isOutsideTarget) {
+                    this.onListBlur(event);
+                }
+                if (this.preventDocumentDefault && this.overlayVisible && isOutsideContainer && isOutsideTarget) {
+                    this.hide();
+                    this.preventDocumentDefault = false;
+                }
+            });
+        }
+    }
+
+    unbindDocumentClickListener() {
+        if (this.documentClickListener) {
+            this.documentClickListener();
+            this.documentClickListener = null;
+        }
+    }
+
+    bindDocumentResizeListener() {
+        if (!this.documentResizeListener && isPlatformBrowser(this.platformId)) {
+            const window = this.document.defaultView;
+            this.documentResizeListener = this.renderer.listen(window, 'resize', this.onWindowResize.bind(this));
+        }
+    }
+
+    unbindDocumentResizeListener() {
+        if (this.documentResizeListener) {
+            this.documentResizeListener();
+            this.documentResizeListener = null;
+        }
+    }
+
+    bindScrollListener() {
+        if (!this.scrollHandler && isPlatformBrowser(this.platformId)) {
+            this.scrollHandler = new ConnectedOverlayScrollHandler(this.target, () => {
+                if (this.visible) {
+                    this.hide();
+                }
+            });
+        }
+
+        this.scrollHandler?.bindScrollListener();
+    }
+
+    unbindScrollListener() {
+        if (this.scrollHandler) {
+            this.scrollHandler.unbindScrollListener();
+        }
+    }
+
+    onOverlayHide() {
+        this.unbindDocumentClickListener();
+        this.unbindDocumentResizeListener();
+        this.unbindScrollListener();
+        this.preventDocumentDefault = false;
+
+        if (!(this.cd as ViewRef).destroyed) {
+            this.target = null;
+        }
+    }
+
+    ngOnDestroy() {
+        if (this.popup) {
+            if (this.scrollHandler) {
+                this.scrollHandler.destroy();
+                this.scrollHandler = null;
+            }
+
+            if (this.container && this.autoZIndex) {
+                ZIndexUtils.clear(this.container);
+            }
+
+            this.restoreOverlayAppend();
+            this.onOverlayHide();
+        }
+
+        if (!this.popup) {
+            this.unbindDocumentClickListener();
+        }
+    }
+
+    hasSubMenu(): boolean {
+        if (this.model) {
+            for (var item of this.model) {
+                if (item.items) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+@NgModule({
+    imports: [CommonModule, RouterModule, RippleModule, TooltipModule],
+    exports: [Menu, RouterModule, TooltipModule],
+    declarations: [Menu, MenuItemContent, SafeHtmlPipe]
+})
+export class MenuModule {}

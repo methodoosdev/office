@@ -1,0 +1,121 @@
+<div>
+
+    <div class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+        <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+            <button kendoButton (click)="calc()" themeColor="primary" [disabled]="!canCalc"> {{ calcLabel }} </button>
+        </div>
+    </div>
+
+    <div class="k-gradient p-3 mb-3">
+        <form [formGroup]="searchForm" class="k-form k-form-vertical">
+            <formly-form [form]="searchForm" [model]="searchModel" [fields]="searchFields" [options]="searchOptions" (modelChange)="modelChangeEvent($event)"></formly-form>
+        </form>
+    </div>
+
+    <div *ngIf="treeData">
+        <kendo-expansionpanel [title]="treeTableTitle" [expanded]="true" class="k-expansionpanel-grid">
+
+            <kendo-treelist #table kendoTreeListExpandable stickyHeader
+                            class="k-treelist-wrap"
+                            idField="id" parentIdField="parentId"
+                            [(expandedKeys)]="expandedIds"
+                            [resizable]="true"
+                            [kendoTreeListFlatBinding]="treeData">
+                <ng-template kendoTreeListToolbarTemplate>
+                    <button kendoButton (click)="expandCollapse()" themeColor="warning">{{expandedIds.length ? collapseLabel : expandLabel}}</button>
+
+                    <kendo-dropdownlist name="level"
+                                        [(ngModel)]="level"
+                                        [data]="levelData"
+                                        [textField]="'label'"
+                                        [valueField]="'value'"
+                                        [valuePrimitive]="true"
+                                        (valueChange)="levelValueChange($event)">
+                    </kendo-dropdownlist>
+
+                    <kendo-treelist-spacer></kendo-treelist-spacer>
+                    <button kendoTreeListExcelCommand themeColor="warning" [disabled]="!canExport"> Excel </button>
+                    <button kendoButton (click)="exportToPdf()" themeColor="warning" [disabled]="!canExport"> Pdf </button>
+                    <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                </ng-template>
+                <kendo-treelist-column *ngFor="let column of treeColumns; let index = index;"
+                                       [expandable]="index === 0"
+                                       [field]="column.field"
+                                       [title]="column.title"
+                                       [style]="column.style"
+                                       [width]="column.width">
+
+                    <ng-template kendoTreeListCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                        <ng-container [ngSwitch]="column.fieldType">
+                            <span *ngSwitchCase="'checkbox'" class="checkbox-column">
+                                <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem[col.field], 'k-i-check-circle k-color-success': dataItem[col.field]}"></span>
+                                &nbsp;<span style="font-size:14px;">{{ dataItem[col.field] === true ? yesLabel : noLabel}}</span>
+                            </span>
+                            <span *ngSwitchCase="'decimal'" class="decimal-column" [style.color]="colorCode(dataItem[col.field])">
+                                {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                            </span>
+                            <span *ngSwitchCase="'percent'" class="percent-column" [style.color]="colorCode(dataItem[col.field])">
+                                {{dataItem[col.field] | kendoNumber: '#,##0.00"%"'}}
+                            </span>
+                            <span *ngSwitchDefault>
+                                {{dataItem[col.field]}}
+                            </span>
+                        </ng-container>
+                    </ng-template>
+                </kendo-treelist-column>
+                <kendo-treelist-excel fileName="financial.xlsx"></kendo-treelist-excel>
+            </kendo-treelist>
+
+        </kendo-expansionpanel>
+
+        <kendo-expansionpanel *ngIf="resultModel" [title]="resultFormTitle" [expanded]="true" class="result-model-form k-expansionpanel-form" style="margin-top: 1rem;">
+            <div class="expansionpanel-buttons">
+                <button kendoButton (click)="resultModelExportToPdf()" themeColor="warning" size="small"> Pdf </button>
+            </div>
+            <div style="padding: 16px;">
+
+                <form [formGroup]="resultForm" class="k-form k-form-horizontal">
+                    <formly-form [form]="resultForm" [model]="resultModel" [fields]="resultFields" [options]="resultOptions"></formly-form>
+                </form>
+
+            </div>
+
+        </kendo-expansionpanel>
+
+        <kendo-expansionpanel *ngIf="remodelingCostsData" [title]="remodelingCostsTableTitle" class="k-expansionpanel-grid" style="margin-top: 1rem;">
+
+            <kendo-grid #remodelingCostsTable [resizable]="true" [data]="remodelingCostsData">
+                <ng-template kendoGridToolbarTemplate>
+                    <kendo-grid-spacer></kendo-grid-spacer>
+                    <button kendoButton (click)="remodelingCostsTable.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                </ng-template>
+                <kendo-grid-column *ngFor="let column of remodelingCostsColumns"
+                                   [field]="column.field"
+                                   [title]="column.title"
+                                   [format]="column.format"
+                                   [style]="column.style">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" let-col="column">
+                        <ng-container [ngSwitch]="column.fieldType">
+                            <span *ngSwitchCase="'checkbox'" class="checkbox-column">
+                                <span class="k-icon k-icon-lg" [ngClass]="{'k-i-minus-outline k-color-error': !dataItem[col.field], 'k-i-check-circle k-color-success': dataItem[col.field]}"></span>
+                                &nbsp;<span style="font-size:14px;">{{ dataItem[col.field] === true ? yesLabel : noLabel}}</span>
+                            </span>
+                            <div *ngSwitchCase="'decimal'" class="decimal-column">
+                                {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                            </div>
+                            <div *ngSwitchDefault>
+                                {{dataItem[col.field]}}
+                            </div>
+                        </ng-container>
+                    </ng-template>
+                </kendo-grid-column>
+            </kendo-grid>
+
+        </kendo-expansionpanel>
+
+    </div>
+
+</div>

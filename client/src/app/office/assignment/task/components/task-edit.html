@@ -1,0 +1,20 @@
+<formly-edit [uow]="uow" [parentUrl]="parentUrl" (onAfterModelChange)="afterModelChange($event)"
+			 [horizontal]="false" [borderForm]="false">
+
+	<kendo-expansionpanel *ngIf="parentId"
+						  [title]="assignmentTaskActionsLabel"
+						  [expanded]="true"
+						  class="k-expansionpanel-grid"
+						  style="margin-top: 1rem;">
+
+		<form-list-detail [insertButtonVisible]="false"
+						  [deleteButtonVisible]="false"
+						  [parentId]="parentId"
+						  [checkboxColumnVisible]="false"
+						  [uow]="assignmentTaskActionUow"
+						  (onColumnButtonClick)="columnButtonClick($event)">
+		</form-list-detail>
+
+	</kendo-expansionpanel>
+
+</formly-edit>

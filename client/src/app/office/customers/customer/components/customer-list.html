@@ -1,0 +1,11 @@
+<form-list [uow]="uow" [toExcelButtonVisible]="true" [pathUrl]="pathUrl">
+
+	<ng-template *ngIf="actionsMenu" pTemplate="toolbar">
+		<div style="margin-bottom: 1rem;">
+
+			<kendo-menu [items]="actionsMenu" [openOnClick]="{ toggle: 'leave' }" (select)="onSelectMenu($event)">
+			</kendo-menu>
+		</div>
+	</ng-template>
+
+</form-list>

@@ -1,0 +1,56 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "importHelpers": true,
+        "lib": [
+            "ES2022",
+            "dom"
+        ],
+        "module": "ES2022",
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitAny": false, //ts7023
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": false, //ts2683
+        "noPropertyAccessFromIndexSignature": true,
+        "outDir": "./dist/out-tsc",
+        "paths": {
+            "@core": [
+                "src/app/core"
+            ],
+            "@primeNg": [
+                "dist/prime-ng"
+            ],
+            "@jwtNg": [
+                "dist/jwt-ng"
+            ],
+            "@formlyNg": [
+                "dist/formly-ng"
+            ],
+            "@officeNg": [
+                "dist/office-ng"
+            ]
+        },
+        "sourceMap": true,
+        "strict": true,
+        "strictFunctionTypes": false, //ts2769
+        "strictNullChecks": false, //ts2531
+        "strictPropertyInitialization": false, //ts2564
+        //"suppressImplicitAnyIndexErrors": true, //ts7015
+        "target": "ES2022",
+        "useDefineForClassFields": false
+    },
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
+    }
+}

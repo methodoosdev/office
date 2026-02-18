@@ -1,0 +1,20 @@
+<div *ngIf="parentId" class="softone-project-detail grid-wrapper">
+
+    <div class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+    </div>
+
+    <form-list-detail [toExcelButtonVisible]="true"
+                      [toPdfButtonVisible]="false"
+                      [selectableSettings]="undefined"
+                      [checkboxColumnVisible]="false"
+                      [insertButtonVisible]="false"
+                      [deleteButtonVisible]="false"
+                      [parentId]="parentId"
+                      [uow]="uow"
+                      (onLoadProperties)="loadPropertiesEvent($event)">
+    </form-list-detail>
+
+</div>

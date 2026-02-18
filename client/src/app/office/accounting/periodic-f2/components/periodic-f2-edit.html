@@ -1,0 +1,316 @@
+<div [@animationState]="animate ? 'active' : 'inactive'">
+
+	<div stickyToolbar class="main-toolbar">
+		<div class="main-toolbar-group-left main-toolbar-group-start">
+			<div class="main-toolbar-title"> {{ title }} </div>
+		</div>
+		<div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+			<button kendoButton *ngIf="!readonly" [disabled]="!canSubmit || hasChanges" (click)="submit()" themeColor="warning"> {{ submitLabel }} </button>
+			<button kendoButton *ngIf="!readonly" [disabled]="!(model?.submitModeTypeId == 2) || !canCalc || hasChanges" (click)="calc()" themeColor="tertiary"> {{ calcLabel }} </button>
+			<button kendoButton *ngIf="!readonly" [disabled]="!hasChanges" (click)="save(false)" themeColor="info"> {{saveLabel}} </button>
+			<button kendoButton *ngIf="!readonly" [disabled]="!hasChanges" (click)="saveAndExit()" themeColor="success"> {{saveAndExitLabel}} </button>
+			<button kendoButton *ngIf="!readonly" [disabled]="!hasChanges" (click)="cancel()" themeColor="warning"> {{cancelLabel}} </button>
+			<button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+		</div>
+	</div>
+
+	<div class="main-toolbar">
+		<div class="main-toolbar-group-center">
+			<button kendoButton (click)="toZoom(true)" themeColor="base" fillMode="flat" icon="zoom-in" class="zoom-in"></button>
+			<button kendoButton (click)="toZoom(false)" themeColor="base" fillMode="flat" icon="zoom-out" class="zoom-out"></button>
+			<button kendoButton [disabled]="zoomEnter" (click)="pdf.saveAs('f2.pdf')" themeColor="base" fillMode="flat">PDF</button>
+		</div>
+	</div>
+
+	<div class="k-box periodic-f2">
+
+		<form novalidate #editForm="ngForm">
+
+			<kendo-pdf-export #pdf paperSize="A4" margin="0.33cm" [scale]=".495">
+
+				<div class="image" [style.zoom]="zoom" *ngIf="model">
+					<kendo-textbox class="field f001b" size="small" rounded="small" name="f001b"
+								   [(ngModel)]="model.f001b" [readonly]="true"></kendo-textbox>
+
+					<kendo-textbox class="field f002" size="small" rounded="small" name="f002Value"
+								   [(ngModel)]="model.f002Value" [readonly]="true"></kendo-textbox>
+
+					<kendo-textbox class="field f004" size="small" rounded="small" name="f004"
+								   [(ngModel)]="model.f004" [readonly]="true"></kendo-textbox>
+
+					<kendo-textbox class="field f005a" size="small" rounded="small" name="f005aValue"
+								   [(ngModel)]="model.f005aValue" [readonly]="true"></kendo-textbox>
+
+					<kendo-textbox class="field f005b" size="small" rounded="small" name="f005bValue"
+								   [(ngModel)]="model.f005bValue" [readonly]="true"></kendo-textbox>
+
+					<input type="checkbox" class="f007" kendoCheckBox [(ngModel)]="model.f007" onclick="return false;" name="f007" />
+
+					<kendo-textbox class="field f101" size="small" rounded="small" name="f101"
+								   [(ngModel)]="model.f101" [readonly]="true"></kendo-textbox>
+
+					<kendo-textbox class="field f104" size="small" rounded="small" name="f104"
+								   [(ngModel)]="model.f104" [readonly]="true"></kendo-textbox>
+
+					<kendo-textbox class="field taxPeriodName" size="small" rounded="small" name="taxPeriodName"
+								   [(ngModel)]="model.taxPeriodName" [readonly]="true"></kendo-textbox>
+
+					<kendo-numerictextbox class="field f301" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f301"
+										  [(ngModel)]="model.f301"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f302" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f302"
+										  [(ngModel)]="model.f302"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f303" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f303"
+										  [(ngModel)]="model.f303"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f304" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f304"
+										  [(ngModel)]="model.f304"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f305" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f305"
+										  [(ngModel)]="model.f305"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f306" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f306"
+										  [(ngModel)]="model.f306"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f307 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f307"
+										  [(ngModel)]="model.f307"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f342" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f342"
+										  [(ngModel)]="model.f342"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f345" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f345"
+										  [(ngModel)]="model.f345"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f348" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f348"
+										  [(ngModel)]="model.f348"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f349" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f349"
+										  [(ngModel)]="model.f349"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f310" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f310"
+										  [(ngModel)]="model.f310"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f311 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f311"
+										  [(ngModel)]="model.f311"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f312" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f312"
+										  [(ngModel)]="model.f312"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f331 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f331"
+										  [(ngModel)]="model.f331"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f332 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f332"
+										  [(ngModel)]="model.f332"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f333 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f333"
+										  [(ngModel)]="model.f333"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f334 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f334"
+										  [(ngModel)]="model.f334"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f335 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f335"
+										  [(ngModel)]="model.f335"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f336 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f336"
+										  [(ngModel)]="model.f336"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f337 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f337"
+										  [(ngModel)]="model.f337"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f361" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f361"
+										  [(ngModel)]="model.f361"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f362" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f362"
+										  [(ngModel)]="model.f362"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f363" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f363"
+										  [(ngModel)]="model.f363"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f364" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f364"
+										  [(ngModel)]="model.f364"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f365" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f365"
+										  [(ngModel)]="model.f365"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f366" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f366"
+										  [(ngModel)]="model.f366"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f367 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f367"
+										  [(ngModel)]="model.f367"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f381" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f381"
+										  [(ngModel)]="model.f381"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f382" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f382"
+										  [(ngModel)]="model.f382"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f383" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f383"
+										  [(ngModel)]="model.f383"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f384" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f384"
+										  [(ngModel)]="model.f384"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f385" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f385"
+										  [(ngModel)]="model.f385"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f386" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f386"
+										  [(ngModel)]="model.f386"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f387 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f387"
+										  [(ngModel)]="model.f387"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f400" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f400"
+										  [(ngModel)]="model.f400"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f402" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f402"
+										  [(ngModel)]="model.f402"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f407" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f407"
+										  [(ngModel)]="model.f407"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f411" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f411"
+										  [(ngModel)]="model.f411"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f422" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f422"
+										  [(ngModel)]="model.f422"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f423" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f423"
+										  [(ngModel)]="model.f423"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f410 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f410"
+										  [(ngModel)]="model.f410"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f428 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f428"
+										  [(ngModel)]="model.f428"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f430 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f430"
+										  [(ngModel)]="model.f430"></kendo-numerictextbox>
+
+					<ng-container *ngIf="!readonly">
+
+						<kendo-label class="caption k-f502Previous" text="502"></kendo-label>
+						<kendo-numerictextbox class="field f502Previous" size="small" rounded="small"
+											  [decimals]="2" [format]="'n2'" [spinners]="false" name="f502Previous"
+											  [(ngModel)]="model.f502Previous"></kendo-numerictextbox>
+
+						<kendo-label class="caption k-f503Previous" text="503"></kendo-label>
+						<kendo-numerictextbox class="field f503Previous" size="small" rounded="small"
+											  [decimals]="2" [format]="'n2'" [spinners]="false" name="f503Previous"
+											  [(ngModel)]="model.f503Previous"></kendo-numerictextbox>
+
+						<kendo-label class="caption k-f511Previous" text="511"></kendo-label>
+						<kendo-numerictextbox class="field f511Previous" size="small" rounded="small"
+											  [decimals]="2" [format]="'n2'" [spinners]="false" name="f511Previous"
+											  [(ngModel)]="model.f511Previous"></kendo-numerictextbox>
+
+						<kendo-label class="caption k-f387Calc" text="387"></kendo-label>
+						<kendo-numerictextbox class="field f387Calc" size="small" rounded="small"
+											  [decimals]="2" [format]="'n2'" [spinners]="false" name="f387Calc"
+											  [(ngModel)]="model.f387Calc"></kendo-numerictextbox>
+
+						<kendo-label class="caption k-f337Calc" text="337"></kendo-label>
+						<kendo-numerictextbox class="field f337Calc" size="small" rounded="small"
+											  [decimals]="2" [format]="'n2'" [spinners]="false" name="f337Calc"
+											  [(ngModel)]="model.f337Calc"></kendo-numerictextbox>
+
+						<kendo-label class="caption k-f5402Calc" text="5402"></kendo-label>
+						<kendo-numerictextbox class="field f5402Calc" size="small" rounded="small"
+											  [decimals]="2" [format]="'n2'" [spinners]="false" name="f5402Calc"
+											  [(ngModel)]="model.f5402Calc"></kendo-numerictextbox>
+
+					</ng-container>
+
+					<kendo-numerictextbox class="field f470 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f470"
+										  [(ngModel)]="model.f470"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f401 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f401"
+										  [(ngModel)]="model.f401"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f403 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f403"
+										  [(ngModel)]="model.f403"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f404 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f404"
+										  [(ngModel)]="model.f404"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f502 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f502"
+										  [(ngModel)]="model.f502"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f503" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f503"
+										  [(ngModel)]="model.f503"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f508 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f508"
+										  [(ngModel)]="model.f508"></kendo-numerictextbox>
+
+					<kendo-numerictextbox class="field f480 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f480"
+										  [(ngModel)]="model.f480"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f483" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f483"
+										  [(ngModel)]="model.f483"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f505 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f505"
+										  [(ngModel)]="model.f505"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f511 lemon" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f511"
+										  [(ngModel)]="model.f511"></kendo-numerictextbox>
+
+					<!--<kendo-dropdownlist class="field f523" size="small" rounded="small" name="f523"
+						[data]="optionsF523" textField="label" valueField="value"
+						[(ngModel)]="model.f523" [valuePrimitive]="true"></kendo-dropdownlist>-->
+
+					<ul class="k-radio-list k-list-horizontal field f523">
+
+						<li class="k-radio-item" *ngFor="let option of optionsF523; let i = index">
+							<input type="radio" [disabled]="readonly"
+								   kendoRadioButton
+								   [id]="'_' + i"
+								   [name]="option.label"
+								   [value]="option.value"
+								   [(ngModel)]="model.f523" />
+							<kendo-label class="k-radio-label" [for]="'_' + i" [text]="option.label"></kendo-label>
+						</li>
+
+					</ul>
+
+					<input type="checkbox" class="f5071" kendoCheckBox [(ngModel)]="model.f5071" name="f5071" [disabled]="readonly" />
+					<input type="checkbox" class="f5072" kendoCheckBox [(ngModel)]="model.f5072" name="f5072" [disabled]="readonly" />
+					<input type="checkbox" class="f5073" kendoCheckBox [(ngModel)]="model.f5073" name="f5073" [disabled]="readonly" />
+					<input type="checkbox" class="f5074" kendoCheckBox [(ngModel)]="model.f5074" name="f5074" [disabled]="readonly" />
+					<input type="checkbox" class="f5075" kendoCheckBox [(ngModel)]="model.f5075" name="f5075" [disabled]="readonly" />
+					<input type="checkbox" class="f5076" kendoCheckBox [(ngModel)]="model.f5076" name="f5076" [disabled]="readonly" />
+
+					<kendo-textbox class="field iban" size="small" rounded="small" name="iban" [readonly]="readonly"
+								   [(ngModel)]="model.iban"></kendo-textbox>
+
+					<kendo-textarea class="field notes" size="small" rounded="small" name="notes" [rows]="5" [readonly]="readonly"
+									[(ngModel)]="model.notes"></kendo-textarea>
+
+					<kendo-numerictextbox class="field f906" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f906"
+										  [(ngModel)]="model.f906"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f907" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f907"
+										  [(ngModel)]="model.f907"></kendo-numerictextbox>
+					<kendo-numerictextbox class="field f908" size="small" rounded="small" [readonly]="readonly"
+										  [decimals]="2" [format]="'n2'" [spinners]="false" name="f908"
+										  [(ngModel)]="model.f908"></kendo-numerictextbox>
+
+
+				</div>
+
+			</kendo-pdf-export>
+
+		</form>
+
+	</div>
+
+</div>

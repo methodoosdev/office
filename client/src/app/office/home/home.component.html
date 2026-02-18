@@ -1,0 +1,353 @@
+<kendo-listview *hasAuthUserViewPermission="roles1"
+                containerClass="k-d-flex k-flex-col k-flex-nowrap"
+                [data]="bookmarks">
+    <ng-template kendoListViewHeaderTemplate>
+        <div class="header">{{title}}</div>
+    </ng-template>
+    <ng-template kendoListViewItemTemplate let-dataItem="dataItem" let-isFirst="isFirst">
+        <div class="contact" [class.border-top]="!isFirst">
+            <a [href]="dataItem.urlPath" class="contact-details">
+                <div class="contact-name">{{ dataItem.description }}</div>
+                <div class="contact-email">{{ dataItem.urlPath }}</div>
+            </a>
+        </div>
+    </ng-template>
+</kendo-listview>
+
+<div class="grid" *hasAuthUserViewPermission="roles2">
+
+    <div class="col-12 md:col-6 xl:col-3">
+        <div class="py-4 px-2 border-round-md surface-card flex flex-wrap h-full align-items-center justify-content-between gap-3 border-1 surface-border">
+            <div class="flex gap-3 align-items-center">
+                <div class="p-2 flex justify-content-center align-items-center border-circle bg-primary text-0 mr-2">
+                    <i class="pi pi-dollar text-2xl"></i>
+                </div>
+
+                <div>
+                    <div class="text-xl font-medium text-left">USD</div>
+                    <div class="text-base text-color-secondary">Dollar</div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Latest</span>
+                    <span class="text-base font-medium">3,5232</span>
+                </div>
+
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Change</span>
+                    <span class="text-base font-medium">-0.85</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 md:col-6 xl:col-3">
+        <div class="py-4 px-2 border-round-md surface-card flex flex-wrap h-full align-items-center justify-content-between gap-3 border-1 surface-border">
+            <div class="flex gap-3 align-items-center">
+                <div class="p-2 flex justify-content-center align-items-center border-circle bg-primary text-0 mr-2">
+                    <i class="pi pi-euro text-2xl"></i>
+                </div>
+
+                <div>
+                    <div class="text-xl font-medium text-left">EUR</div>
+                    <div class="text-base text-color-secondary">Euro</div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Latest</span>
+                    <span class="text-base font-medium">4,1246</span>
+                </div>
+
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Change</span>
+                    <span class="text-base font-medium">-0.16</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" col-12 md:col-6 xl:col-3">
+        <div class="py-4 px-2 border-round-md surface-card flex flex-wrap h-full align-items-center justify-content-between gap-3 border-1 surface-border">
+            <div class="flex gap-3 align-items-center">
+                <div class="p-2 flex justify-content-center align-items-center border-circle bg-primary text-0 mr-2">
+                    <i class="pi pi-pound text-2xl"></i>
+                </div>
+
+                <div>
+                    <div class="text-xl font-medium text-left">GBP</div>
+                    <div class="text-base text-color-secondary">Pound</div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Latest</span>
+                    <span class="text-base font-medium">4,6300</span>
+                </div>
+
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Change</span>
+                    <span class="text-base font-medium">-0.25</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 md:col-6 xl:col-3">
+        <div class="py-4 px-2 border-round-md surface-card flex flex-wrap h-full align-items-center justify-content-between gap-3 border-1 surface-border">
+            <div class="flex gap-3 align-items-center">
+                <div class="p-2 flex justify-content-center align-items-center border-circle bg-primary text-0 mr-2">
+                    <i class="pi pi-bitcoin text-2xl"></i>
+                </div>
+
+                <div>
+                    <div class="text-xl font-medium text-left">BTC</div>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Latest</span>
+                    <span class="text-base font-medium">143,059</span>
+                </div>
+
+                <div class="flex flex-column gap-1">
+                    <span class="text-sm text-color-secondary">Change</span>
+                    <span class="text-base font-medium">-0.85</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div class="card h-full">
+            <h5>Accounts</h5>
+            <div class="flex justify-content-between border-bottom-1 surface-border p-3">
+                <span class="font-semibold text-color-secondary text-xl">Grand Total</span>
+                <span class="text-green-500 text-2xl font-bold">$624,504.00</span>
+            </div>
+
+            <div class="p-3">
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-money-bill text-color-secondary"></i>
+                        <span class="text-color-secondary">Bank Accounts</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$320,521.25</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-briefcase text-color-secondary"></i>
+                        <span class="text-color-secondary">Saving</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$94,305.00</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-globe text-color-secondary"></i>
+                        <span class="text-color-secondary">Stocks</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$5,000.00</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-dollar text-color-secondary"></i>
+                        <span class="text-color-secondary">Profit</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$21.25</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div class="card h-full">
+            <h5>Debit Management</h5>
+            <div class="flex justify-content-between border-bottom-1 surface-border p-3">
+                <span class="font-semibold text-color-secondary text-xl">Grand Total</span>
+                <span class="text-red-500 text-2xl font-bold">$-125,330.00</span>
+            </div>
+
+            <div class="p-3">
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-briefcase text-color-secondary"></i>
+                        <span class="text-color-secondary">Used Credits</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$100,240.00</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-calendar text-color-secondary"></i>
+                        <span class="text-color-secondary">Loans</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$25,090.00</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex align-items-center justify-content-between py-2">
+                    <div class="flex gap-3 text-lg align-items-center">
+                        <i class="pi pi-ticket text-color-secondary"></i>
+                        <span class="text-color-secondary">Overdrafts</span>
+                    </div>
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-semibold text-base">$0</span>
+                        <a href="#" class="text-color-secondary">
+                            <i class="pi pi-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div class="card h-full">
+            <h5>Monthly Statistics</h5>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex w-7 align-items-center justify-content-between">
+                    <img src="assets/avalon/images/dashboard-banking/asset-visa.png" alt="avalon-layout" width="52" />
+                    <div class="flex flex-column">
+                        <span class="font-medium">07 July 2023</span>
+                        <span class="text-color-secondary">11.05</span>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="font-medium">Online Payment</span>
+                        <span class="text-color-secondary">Visa Card</span>
+                    </div>
+                </div>
+                <div class="w-5 flex justify-content-end">
+                    <button pButton label="See Details" class="p-button-outlined"></button>
+                </div>
+            </div>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex w-7 align-items-center justify-content-between">
+                    <img src="assets/avalon/images/dashboard-banking/asset-netflix.png" alt="avalon-layout"
+                         width="52" />
+                    <div class="flex flex-column">
+                        <span class="font-medium">06 July 2023</span>
+                        <span class="text-color-secondary">11.05</span>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="font-medium">Online Payment</span>
+                        <span class="text-color-secondary">Netflix</span>
+                    </div>
+                </div>
+                <div class="w-5 flex justify-content-end">
+                    <button pButton label="See Details" class="p-button-outlined"></button>
+                </div>
+            </div>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex w-7 align-items-center justify-content-between">
+                    <img src="assets/avalon/images/dashboard-banking/asset-spotify.png" alt="avalon-layout"
+                         width="52" />
+                    <div class="flex flex-column">
+                        <span class="font-medium">05 July 2023</span>
+                        <span class="text-color-secondary">08.32</span>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="font-medium">Online Payment</span>
+                        <span class="text-color-secondary">Spotify</span>
+                    </div>
+                </div>
+                <div class="w-5 flex justify-content-end">
+                    <button pButton label="See Deatils" class="p-button-outlined"></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+        <div class="card h-full">
+            <h5>Transactions</h5>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex w-7 align-items-center justify-content-between">
+                    <img src="assets/avalon/images/dashboard-banking/asset-newyorker.png" alt="avalon-layout"
+                         width="52" />
+                    <div class="flex flex-column">
+                        <span class="font-medium">02 July 2023</span>
+                        <span class="text-color-secondary">14.46</span>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="font-medium">Purchase</span>
+                        <span class="text-color-secondary">The New Yorker</span>
+                    </div>
+                </div>
+                <div class="w-5 flex justify-content-end">
+                    <button pButton label="See Details" class="p-button-outlined"></button>
+                </div>
+            </div>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex w-7 align-items-center justify-content-between">
+                    <img src="assets/avalon/images/dashboard-banking/asset-google.png" alt="avalon-layout" width="52" />
+                    <div class="flex flex-column">
+                        <span class="font-medium">02 July 2023</span>
+                        <span class="text-color-secondary">12.51</span>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="font-medium">Online Payment</span>
+                        <span class="text-color-secondary">Google</span>
+                    </div>
+                </div>
+                <div class="w-5 flex justify-content-end">
+                    <button pButton label="See Details" class="p-button-outlined"></button>
+                </div>
+            </div>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="flex w-7 align-items-center justify-content-between">
+                    <img src="assets/avalon/images/dashboard-banking/asset-soundcloud.png" alt="avalon-layout"
+                         width="52" />
+                    <div class="flex flex-column">
+                        <span class="font-medium">01 July 2023</span>
+                        <span class="text-color-secondary">09.27</span>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="font-medium">Online Payment</span>
+                        <span class="text-color-secondary">SoundCloud</span>
+                    </div>
+                </div>
+                <div class="w-5 flex justify-content-end">
+                    <button pButton label="See Details" class="p-button-outlined"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,17 @@
+<div class="layout-topbar" [ngClass]="{'border-bottom-none': layoutService.config.topbarTheme !== 'light'}">
+    <div class="layout-topbar-start">
+        <a class="layout-topbar-logo" [routerLink]="['/office']">
+            <img src="assets/images/logo.png" alt="topbar-logo" />
+        </a>
+        <a #menuButton class="layout-menu-button" (click)="onMenuButtonClick()" pRipple>
+            <i class="pi pi-angle-right"></i>
+        </a>
+
+        <a #mobileMenuButton class="layout-topbar-mobile-button" (click)="onMobileTopbarMenuButtonClick()" pRipple>
+            <i class="pi pi-bars text-4xl"></i>
+        </a>
+    </div>
+
+    <ng-content></ng-content>
+
+</div>

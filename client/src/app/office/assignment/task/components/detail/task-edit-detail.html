@@ -1,0 +1,44 @@
+<div style="color: #0d6efd; font-size:16px; margin-bottom: 10px;white-space: break-spaces;">
+    {{ model?.description }}
+</div>
+
+<kendo-grid [data]="gridData" [hideHeader]="true" scrollable="none">
+    <kendo-grid-column field="letterName" [width]="64">
+        <ng-template kendoGridCellTemplate let-dataItem>
+
+            <p-avatar [label]="dataItem.letterName"
+                      styleClass="mr-2"
+                      size="large"
+                      [style]="{ 'background-color': dataItem.background, color: dataItem.color }"
+                      shape="circle">
+            </p-avatar>
+
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="actionName" [width]="255">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <h6>{{ dataItem.actionName }}</h6>
+            <div *ngIf="dataItem.actionDescription">
+                <p style="white-space: initial;">
+                    <span class="k-icon k-i-clip-45" style="color:mediumblue;"></span>
+                    <more-less [text]="dataItem.actionDescription"></more-less>
+                </p>
+            </div>
+            <div *ngIf="dataItem.notes">                
+                <p style="white-space: initial;">
+                    <span class="k-icon k-i-check" style="color:orange;"></span>
+                    <more-less [text]="dataItem.notes"></more-less>
+                </p>
+            </div>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="assignmentActionPriorityTypeName"> </kendo-grid-column>
+    <kendo-grid-column field="employeeName"> </kendo-grid-column>
+    <kendo-grid-column field="departmentName"> </kendo-grid-column>
+    <kendo-grid-column field="expiryDate">
+        <ng-template kendoGridCellTemplate let-dataItem>
+            <p style="word-wrap: break-word;">{{ dataItem.expiryDate | kendoDate: "d"}}</p>
+        </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="assignmentActionStatusTypeName"> </kendo-grid-column>
+</kendo-grid>

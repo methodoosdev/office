@@ -1,0 +1,29 @@
+
+<form-list [uow]="uow"
+           [pathUrl]="pathUrl"
+           [multipleDelete]="true"
+           [settingsMenuItems]="settingsMenuItems"
+           [rowClass]="rowClass"
+           [cellButtonDisabled]="cellButtonDisabled"
+           (onColumnButtonClick)="columnButtonClick($event)"
+           (onLoadProperties)="onLoadProperties($event)">
+
+    <ng-template pTemplate="header">
+
+        <div class="main-toolbar">
+            <div class="main-toolbar-group-left main-toolbar-group-start">
+                <div class="main-toolbar-title"> {{ title }} </div>
+            </div>
+            <div class="main-toolbar-group-right main-toolbar-group-end gap-2">
+                <button kendoButton (click)="identityPayment()" themeColor="warning"> {{ identityPaymentLabel }} </button>
+                <button kendoButton (click)="retrieve()" themeColor="primary"> {{ retrieveLabel }} </button>
+                <button kendoButton (click)="generate()" themeColor="success"> {{ createLabel }} </button>
+                <button kendoButton (click)="deleteRecord()" themeColor="error" [disabled]="!table?.canDelete"> {{ deleteLabel }} </button>
+            </div>
+        </div>
+
+    </ng-template>
+
+</form-list>
+
+<!--<ng-container #container></ng-container>-->

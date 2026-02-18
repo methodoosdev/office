@@ -1,0 +1,38 @@
+.k-expansionpanel-grid {
+    .k-expander-content {
+        padding: 0;
+    }
+
+    .k-grid th {
+        /*white-space: normal;*/
+        vertical-align: middle;
+        text-align: center;
+    }
+}
+
+.result-model-form .k-input-inner {
+    text-align: right;
+}
+
+input.k-input-inner:read-only + span.k-input-spinner {
+    display: none;
+}
+
+.k-toolbar .k-picker {
+    width: 230px;
+}
+.k-expansionpanel-form {
+    .k-expander-content {
+        padding-top: 0;
+    }
+}
+.expansionpanel-buttons {
+    width: 50%;
+    border: 1px solid #eeeeee;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+
+    .k-button {
+        margin: 8px;
+    }
+}

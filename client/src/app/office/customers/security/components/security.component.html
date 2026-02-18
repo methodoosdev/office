@@ -1,0 +1,83 @@
+<div *ngIf="model" class="form-control card-container" [@animationState]="'active'">
+    <div class="card-header-wrapper">
+        <h4 class="card-title"> {{ titleLabel }} </h4>
+        <div class="card-buttons">
+            <button kendoButton [disabled]="!hasChanges" (click)="save()" themeColor="info"> {{saveLabel}} </button>
+            <button kendoButton (click)="register()" themeColor="info"> {{registerLabel}} </button>
+            <button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+        </div>
+    </div>
+
+    <div class="card-component">
+
+        <form #form="ngForm" novalidate class="content">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+                    <div class="cards-group">
+                        <div class="card card-default">
+                            <div class="card-body">
+                                <p *ngIf="availablePermissions.length == 0"> No permissions defined </p>
+                                <p *ngIf="availableCustomerRoles.length == 0"> No customer roles available </p>
+
+                                <div class="k-grid" style="overflow-x: auto;">
+                                    <div class="k-grid-aria-root" style="width: 1400px;">
+                                        <div class="k-grid-header">
+                                            <div class="k-grid-header-wrap">
+
+                                                <table>
+                                                    <colgroup>
+                                                        <col style="width: 120px;" />
+                                                        <col style="width:50px;" *ngFor="let cr of availableCustomerRoles"/>
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" class="k-header k-touch-action-none">
+                                                                <div style="font-weight: 700;"> Permission</div>
+                                                            </th>
+                                                            <th *ngFor="let cr of availableCustomerRoles" scope="col" class="k-header k-touch-action-none">
+                                                                <div style="font-weight: 700;">{{cr.name}}</div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="k-grid-container">
+                                            <div class="k-grid-content k-virtual-content">
+                                                <div class="k-grid-table-wrap">
+
+                                                    <table class="k-grid-table">
+                                                        <colgroup>
+                                                            <col style="width: 120px;" />
+                                                            <col style="width:50px;" *ngFor="let cr of availableCustomerRoles" />
+                                                        </colgroup>
+                                                        <tbody>
+                                                            <tr *ngFor="let pr of availablePermissions">
+                                                                <td class="k-touch-action-none">
+                                                                    <span>{{pr.name}}</span>
+                                                                </td>
+                                                                <td *ngFor="let cr of availableCustomerRoles" class="k-touch-action-none text-center">
+                                                                    <input type="checkbox" [name]="'allow_' + cr.id + '_' + pr.systemName"
+                                                                           kendoCheckBox size="large" [(ngModel)]="model[pr.systemName][cr.id]" />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

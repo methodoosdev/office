@@ -1,0 +1,135 @@
+
+
+<div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+    <div class="flex flex-wrap" style="margin-bottom: 1rem;">
+        <div class="flex align-items-center justify-content-center mb-3">
+            <div class="flex flex-column">
+                <div class="flex align-items-center justify-content-start">
+                    <h5 style="margin:0;">{{ title }}</h5>
+                </div>
+                <div class="flex align-items-center justify-content-start">
+                    <h6 style="margin:0;color: gray;">{{ traderName }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="flex align-items-center justify-content-end flex-grow-1">
+
+            <div class="flex flex-wrap">
+                <div class="flex align-items-center justify-content-center m-1">
+                    <button kendoButton (click)="navigationBack()" themeColor="base" icon="reset"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form #form="ngForm" novalidate>
+        <kendo-grid #table [data]="gridData"
+                    [group]="groups"
+                    [groupable]="true"
+                    (groupChange)="groupChange($event)"
+                    [navigable]="true"
+                    [resizable]="true">
+            <ng-template kendoGridToolbarTemplate>
+                <kendo-grid-spacer></kendo-grid-spacer>
+                <button kendoGridExcelCommand themeColor="warning"> Excel </button>
+                <button kendoGridPDFCommand themeColor="warning">Pdf</button>
+
+                <button kendoButton (click)="table.autoFitColumns()" themeColor="warning" icon="arrows-resizing" [title]="autofitColumnsLabel"></button>
+                <kendo-grid-column-chooser></kendo-grid-column-chooser>
+            </ng-template>
+            <kendo-grid-column *ngFor="let col of columns"
+                               [width]="col.width"
+                               [field]="col.field"
+                               [title]="col.title"
+                               [format]="col.format"
+                               [hidden]="col.hidden"
+                               [media]="col.media"
+                               [filter]="col.filterType"
+                               [style]="col.style"
+                               [headerStyle]="col.headerStyle">
+                <ng-template kendoGridHeaderTemplate>
+                    <div [title]="col.titleTooltip">{{ col.title }}</div>
+                </ng-template>
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    <ng-container [ngSwitch]="col.fieldType">
+                        <span *ngSwitchCase="'checkbox'" class="checkbox-column">
+                            <span [ngClass]="{'check-yes': dataItem[col.field], 'check-no': !dataItem[col.field]}">
+                                {{dataItem[col.field]===true?'NAI':'OXI'}}
+                            </span>
+                        </span>
+                        <span *ngSwitchCase="'time'" class="date-column">
+                            {{dataItem[col.field] | kendoDate: 'HH:mm'}}
+                        </span>
+                        <span *ngSwitchCase="'date'" class="date-column">
+                            {{dataItem[col.field] | kendoDate}}
+                        </span>
+                        <span *ngSwitchCase="'decimal'" class="decimal-column">
+                            {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                        </span>
+                        <span *ngSwitchDefault>
+                            {{dataItem[col.field]}}
+                        </span>
+                    </ng-container>
+                </ng-template>
+            </kendo-grid-column>
+            <div *kendoGridDetailTemplate="let dataItem">
+                <kendo-grid [data]="dataItem.details"
+                            [resizable]="true"
+                            [navigable]="true"
+                            kendoGridFocusable>
+                    <kendo-grid-column *ngFor="let col of detailColumns"
+                                       [width]="col.width"
+                                       [field]="col.field"
+                                       [title]="col.title"
+                                       [format]="col.format"
+                                       [hidden]="col.hidden"
+                                       [media]="col.media"
+                                       [filter]="col.filterType"
+                                       [style]="col.style"
+                                       [headerStyle]="col.headerStyle">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                            <ng-container [ngSwitch]="col.fieldType">
+                                <span *ngSwitchCase="'checkbox'" class="checkbox-column">
+                                    <span [ngClass]="{'check-yes': dataItem[col.field], 'check-no': !dataItem[col.field]}">
+                                        {{dataItem[col.field]===true?'NAI':'OXI'}}
+                                    </span>
+                                </span>
+                                <span *ngSwitchCase="'time'" class="date-column">
+                                    {{dataItem[col.field] | kendoDate: 'HH:mm'}}
+                                </span>
+                                <span *ngSwitchCase="'date'" class="date-column">
+                                    {{dataItem[col.field] | kendoDate}}
+                                </span>
+                                <span *ngSwitchCase="'decimal'" class="decimal-column">
+                                    {{dataItem[col.field] | kendoNumber: '#,##0.00'}}
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{dataItem[col.field]}}
+                                </span>
+                            </ng-container>
+                        </ng-template>
+                    </kendo-grid-column>
+                </kendo-grid>
+            </div>
+
+            <kendo-grid-excel [fileName]="excelFileName"></kendo-grid-excel>
+            <kendo-grid-pdf [fileName]="pdfFileName"
+                            [allPages]="true"
+                            paperSize="A4"
+                            margin="1cm"
+                            [scale]="0.6"
+                            [repeatHeaders]="true">
+                <ng-template kendoGridPDFTemplate
+                             let-pageNum="pageNum"
+                             let-totalPages="totalPages">
+                    <div class="page-template">
+                        <div class="footer">Page {{ pageNum }} of {{ totalPages }}</div>
+                    </div>
+                </ng-template>
+            </kendo-grid-pdf>
+        </kendo-grid>
+
+    </form>
+
+</div>

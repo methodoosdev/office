@@ -1,0 +1,67 @@
+<kendo-dialog *ngIf="active"
+              [width]="390"
+              [height]="420"
+              (close)="closeForm()">
+    <kendo-dialog-titlebar>
+        {{ isNew ? insertLabel : modifyLabel }}
+    </kendo-dialog-titlebar>
+
+    <form novalidate class="k-form k-form-horizontal" [formGroup]="editForm">
+        <kendo-formfield orientation="horizontal" style="margin-bottom: 10px;">
+            <kendo-label [for]="countryCode" [text]="fields?.countryCode"></kendo-label>
+            <kendo-textbox #countryCode formControlName="countryCode"
+                           [required]="isNew"
+                           [readonly]="!isNew"></kendo-textbox>
+        </kendo-formfield>
+
+        <kendo-formfield orientation="horizontal" style="margin-bottom: 10px;">
+            <kendo-label [for]="vat" [text]="fields?.vat"></kendo-label>
+            <kendo-textbox #vat formControlName="vat"
+                           [required]="isNew"
+                           [readonly]="!isNew"></kendo-textbox>
+        </kendo-formfield>
+
+        <kendo-formfield orientation="horizontal" style="margin-bottom: 10px;">
+            <kendo-label [for]="goods" [text]="fields?.goods"></kendo-label>
+            <kendo-numerictextbox #goods formControlName="goods"
+                                  [decimals]="2"
+                                  format="n2">
+            </kendo-numerictextbox>
+        </kendo-formfield>
+
+        <kendo-formfield orientation="horizontal" style="margin-bottom: 10px;">
+            <kendo-label [for]="triangleExchange" [text]="fields?.triangleExchange"></kendo-label>
+            <kendo-numerictextbox #triangleExchange formControlName="triangleExchange"
+                                  [decimals]="2"
+                                  format="n2">
+            </kendo-numerictextbox>
+        </kendo-formfield>
+
+        <kendo-formfield orientation="horizontal" style="margin-bottom: 10px;">
+            <kendo-label [for]="services" [text]="fields?.services"></kendo-label>
+            <kendo-numerictextbox #services formControlName="services"
+                                  [decimals]="2"
+                                  format="n2">
+            </kendo-numerictextbox>
+        </kendo-formfield>
+
+        <kendo-formfield orientation="horizontal" style="margin-bottom: 10px;">
+            <kendo-label [for]="products4200" [text]="fields?.products4200"></kendo-label>
+            <kendo-numerictextbox #products4200 formControlName="products4200"
+                                  [decimals]="2"
+                                  format="n2">
+            </kendo-numerictextbox>
+        </kendo-formfield> 
+
+    </form>
+
+    <kendo-dialog-actions>
+        <button kendoButton (click)="onCancel($event)">{{cancelLabel}}</button>
+        <button kendoButton
+                themeColor="primary"
+                [disabled]="!editForm.valid"
+                (click)="onSave($event)">
+            {{saveLabel}}
+        </button>
+    </kendo-dialog-actions>
+</kendo-dialog>

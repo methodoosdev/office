@@ -1,0 +1,15 @@
+<span *ngIf="text?.length <= wordLimit">{{ text }}</span>
+
+<span *ngIf="text?.length > wordLimit && !showMore">
+	{{ text.substring(0, wordLimit) }}
+	<span class="more-less-button" (click)="toggle()">
+		<span class="k-icon k-icon-sm k-i-plus-outline k-color-warning"></span>
+	</span>
+</span>
+
+<span *ngIf="text?.length > wordLimit && showMore">
+	{{ text }}
+	<span class="more-less-button" (click)="toggle()">
+		<span class="k-icon k-icon-sm k-i-minus-outline k-color-warning"></span>
+	</span>
+</span>

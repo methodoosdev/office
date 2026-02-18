@@ -1,0 +1,17 @@
+<form-list [uow]="uow"
+		   [newRecordButtonVisible]="false"
+		   [deleteRecordButtonVisible]="false"
+		   [settingsMenuItems]="settingsMenuItems"
+		   [toExcelButtonVisible]="true"
+		   [filterButtonVisible]="true"
+		   [rowClass]="rowClass"
+		   [pathUrl]="pathUrl"
+		   (onFilterInputsChange)="filterInputsChange($event)">
+
+	<div *ngIf="filterInputs" style="border: 1px solid #ebebeb; padding: 10px 10px 0; margin-bottom: 1rem;">
+		<form [formGroup]="filterInputs.form" class="k-form k-form-horizontal">
+			<formly-form [form]="filterInputs.form" [model]="filterInputs.model" [fields]="filterInputs.fields" [options]="filterInputs.options"></formly-form>
+		</form>
+	</div>
+
+</form-list>

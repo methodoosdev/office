@@ -1,0 +1,45 @@
+
+.k-pivotgrid-table .k-pivotgrid-header-root {
+    display: none;
+}
+.k-first.k-pivotgrid-cell {
+    width: 100%;
+}
+/*
+.k-pivotgrid-column-headers .k-pivotgrid-cell {
+    text-align: center;
+}
+
+.k-pivotgrid-row-headers table.k-pivotgrid-table {
+    table-layout: auto;
+}
+
+.k-pivotgrid-table .k-pivotgrid-header-root {
+    text-transform: none !important;
+}
+
+.k-pivotgrid-values .k-pivotgrid-row {
+    text-align: right;
+}
+
+.k-pivotgrid-column-headers .k-pivotgrid-row .k-pivotgrid-header-total {
+    display: none;
+}
+
+.k-pivotgrid-values .k-pivotgrid-row .k-pivotgrid-header-total {
+    display: none;
+}
+
+.k-pivotgrid-values .k-pivotgrid-table colgroup col:last-child,
+.k-pivotgrid-column-headers .k-pivotgrid-table colgroup col:last-child {
+    display: none;
+}
+
+.k-pivotgrid-row-headers .k-pivotgrid-row:last-child {
+    display: none;
+}
+
+.k-pivotgrid .k-pivotgrid-toggle {
+    display: none;
+}
+*/

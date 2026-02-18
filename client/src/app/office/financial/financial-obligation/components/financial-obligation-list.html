@@ -1,0 +1,27 @@
+<form-list [uow]="uow" [toExcelButtonVisible]="true" [pathUrl]="pathUrl"
+           [multipleDelete]="true"
+           [filterButtonVisible]="true"
+           [menuItems]="menuItems"
+           [settingsMenuItems]="settingsMenuItems"
+           (onSelectMenuItem)="selectedMenuItem($event)"
+           (onSelectedKeysChange)="selectedKeysChange($event)"
+           (onRequestInputsChange)="requestInputsChange($event)"
+           (onFilterInputsChange)="filterInputsChange($event)">
+
+    <ng-template pTemplate="toolbar">
+
+        <div *ngIf="requestInputs" class="k-gradient p-3 mb-3">
+            <form [formGroup]="requestInputs.form" class="k-form k-form-vertical">
+                <formly-form [form]="requestInputs.form" [model]="requestInputs.model" [fields]="requestInputs.fields" [options]="requestInputs.options"></formly-form>
+            </form>
+        </div>
+
+    </ng-template>
+
+    <div *ngIf="filterInputs" style="border: 1px solid #ebebeb; padding: 10px 10px 0; margin-bottom: 1rem;">
+        <form [formGroup]="filterInputs.form" class="k-form k-form-vertical">
+            <formly-form [form]="filterInputs.form" [model]="filterInputs.model" [fields]="filterInputs.fields" [options]="filterInputs.options"></formly-form>
+        </form>
+    </div>
+
+</form-list>

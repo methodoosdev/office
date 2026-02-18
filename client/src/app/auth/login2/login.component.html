@@ -1,0 +1,43 @@
+
+<form class="signin-form" #form="ngForm" (submit)="submitForm(form)" novalidate>
+    <div class="grid">
+        <div class="col-12" style="text-align:left;">
+            <h2 class="signin-title">{{ companyNameLabel }}</h2>
+            <span class="signin-subtitle" style="font-size: 16px;">{{ signInLabel }}</span>
+        </div>
+        <div class="col-12" style="text-align:left;">
+            <div class="login-input">
+                <input type="text" name="userName" [(ngModel)]="model.userName" required
+                       autocomplete="off" placeholder="Enter your email" class="p-inputtext">
+            </div>
+        </div>
+        <div class="col-12" style="text-align:left;">
+            <div class="login-input">
+                <input type="password" name="password" [(ngModel)]="model.password" required
+                       autocomplete="off" placeholder="Enter your password" class="p-inputtext">
+            </div>
+        </div>
+        <div class="col-12" style="text-align:left;">
+            <div class="login-input" style="font-size: 16px;">
+                <input type="checkbox" name="rememberMe" [(ngModel)]="model.rememberMe"> {{ rememberMeLabel }}
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="login-input">
+                <button type="submit" style="width: 100%" class="p-button" [disabled]="form.invalid">
+                    <span style="font-size: 16px;">
+                        <kendo-loader *ngIf="loading" size="small" themeColor="light"> </kendo-loader>
+                        {{ loginLabel }}
+                    </span>
+                </button>
+            </div>
+        </div>
+        <div class="col-12" style="text-align:right;">
+            <div class="login-input">
+                <a [routerLink]="['/welcome']" class="forget-password" style="font-size: 16px;">{{ homeLabel }}</a>
+            </div>
+        </div>
+    </div>
+
+</form>
+

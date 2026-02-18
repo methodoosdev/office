@@ -1,0 +1,6 @@
+<kendo-dialog-titlebar>
+	{{ title }}
+</kendo-dialog-titlebar>
+
+<span *ngIf="!imageSrc" class="k-icon k-i-loading"></span>
+<img *ngIf="!!imageSrc" [src]="imageSrc" style="width:100%; height: auto;" alt="image" width="1000" height="7500">

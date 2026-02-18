@@ -1,0 +1,133 @@
+<formly-edit-new [uow]="uow" [parentUrl]="parentUrl" [borderForm]="false"
+                 (onLoadModelEvent)="loadModelEvent($event)">
+
+    <ng-template *ngIf="actionsMenu" pTemplate="toolbar">
+
+        <div style="margin-bottom: 1rem;">
+            <kendo-menu [items]="actionsMenu" [openOnClick]="{ toggle: 'leave' }" (select)="onSelectMenu($event)">
+            </kendo-menu>
+        </div>
+
+    </ng-template>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="employeesLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail-mapping [parentId]="parentId"
+                                  [uow]="employeesByTraderUow"
+                                  [dialogTitle]="employeesLabel"
+                                  [dialogUow]="employeeUow">
+        </form-list-detail-mapping>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="traderRelationshipsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail [parentId]="parentId"
+                          [uow]="traderRelationshipUow"
+                          [allowDblClickRow]="true"
+                          (onDblRowClick)="modifyTraderRelationships($event)"
+                          (onInsertButtonClick)="modifyTraderRelationships($event)">
+        </form-list-detail>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="traderMembershipsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail [parentId]="parentId"
+                          [uow]="traderMembershipUow"
+                          [allowDblClickRow]="true"
+                          (onDblRowClick)="modifyTraderMemberships($event)"
+                          (onInsertButtonClick)="modifyTraderMemberships($event)">
+        </form-list-detail>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="traderKadsLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail [insertButtonVisible]="false"
+                          [deleteButtonVisible]="false"
+                          [parentId]="parentId"
+                          [checkboxColumnVisible]="false"
+                          [uow]="traderKadUow">
+        </form-list-detail>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="traderBranchesLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail [insertButtonVisible]="false"
+                          [deleteButtonVisible]="false"
+                          [parentId]="parentId"
+                          [checkboxColumnVisible]="false"
+                          [uow]="traderBranchUow">
+        </form-list-detail>
+
+    </kendo-expansionpanel>
+
+    <kendo-expansionpanel *ngIf="parentId"
+                          [title]="traderInfoLabel"
+                          class="k-expansionpanel-grid"
+                          style="margin-top: 1rem;">
+
+        <form-list-detail [parentId]="parentId"
+                          [uow]="traderInfoUow"
+                          [allowDblClickRow]="true"
+                          (onDblRowClick)="modifyTraderInfo($event)"
+                          (onInsertButtonClick)="modifyTraderInfo($event)">
+        </form-list-detail>
+
+    </kendo-expansionpanel>
+
+    <div *ngIf="traderRatingVisible">
+
+        <kendo-expansionpanel *ngIf="parentId"
+                              [title]="traderRatingLabel"
+                              class="k-expansionpanel-grid"
+                              style="margin-top: 1rem;">
+
+            <form-list-detail-mapping [parentId]="parentId"
+                                      [uow]="traderRatingByTraderUow"
+                                      [dialogTitle]="traderRatingLabel"
+                                      [dialogUow]="traderRatingUow"
+                                      [dialogShowSelectAll]="false"
+                                      [groupable]="{ enabled: false, showFooter: false }">
+            </form-list-detail-mapping>
+
+        </kendo-expansionpanel>
+
+    </div>
+
+    <div *ngIf="hasPermissions">
+
+        <kendo-expansionpanel *ngIf="parentId"
+                              [title]="traderMonthlyBillingLabel"
+                              class="k-expansionpanel-grid"
+                              style="margin-top: 1rem;">
+
+            <form-list-detail [parentId]="parentId"
+                              [uow]="traderMonthlyBillingUnitOfWork"
+                              [allowDblClickRow]="true"
+                              (onDblRowClick)="modifyTraderMonthlyBilling($event)"
+                              (onInsertButtonClick)="modifyTraderMonthlyBilling($event)">
+            </form-list-detail>
+
+        </kendo-expansionpanel>
+
+    </div>
+
+</formly-edit-new>

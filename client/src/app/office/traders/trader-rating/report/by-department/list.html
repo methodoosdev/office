@@ -1,0 +1,40 @@
+<div>
+
+    <div stickyToolbar class="main-toolbar">
+        <div class="main-toolbar-group-left main-toolbar-group-start">
+            <div class="main-toolbar-title"> {{ title }} </div>
+        </div>
+    </div>
+
+    <div *ngIf="gridData" [@animationState]="animate ? 'active' : 'inactive'">
+
+        <!--[configurator]="settings"-->
+        <kendo-pivotgrid [kendoPivotLocalBinding]="gridData"
+                         [dimensions]="dimensions"
+                         [measures]="measures"
+                         [rowAxes]="defaultRowAxes"
+                         [columnAxes]="defaultColumnAxes"
+                         [measureAxes]="defaultMeasureAxes">
+            <ng-template kendoPivotGridRowHeaderCellTemplate
+                         let-text="text"
+                         let-rowIndex="rowIndex"
+                         let-columnIndex="columnIndex"
+                         let-tableType="tableType"
+                         let-expanded="expanded"
+                         let-dataItem>
+                {{text}}
+            </ng-template>
+            <ng-template kendoPivotGridValueCellTemplate
+                         let-value="value"
+                         let-rowIndex="rowIndex"
+                         let-columnIndex="columnIndex"
+                         let-tableType="tableType"
+                         let-expanded="expanded"
+                         let-dataItem>
+                {{ formatNumber(value) }}
+            </ng-template>
+        </kendo-pivotgrid>
+
+    </div>
+
+</div>

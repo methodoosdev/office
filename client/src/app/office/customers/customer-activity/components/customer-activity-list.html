@@ -1,0 +1,15 @@
+<form-list [uow]="uow"
+           [newRecordButtonVisible]="false"
+           [allowDblClickRow]="false"
+           [toExcelButtonVisible]="true"
+           [pathUrl]="pathUrl"
+           [multipleDelete]="true"
+           [gridDetailTemplateEnable]="true">
+
+    <ng-template pTemplate="gridDetail" let-dataItem let-rowIndex="rowIndex">
+
+        <div [innerHtml]="dataItem.comment | safe: 'html'" style="margin: 10px;"></div>
+
+    </ng-template>
+
+</form-list>
