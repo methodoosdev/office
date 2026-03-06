@@ -1,0 +1,456 @@
+﻿@model (App.Models.VatExemption.VatExemptionDocModel Doc, App.Services.Common.Pdf.HtmlPdfItem Item);
+@inject App.Services.Localization.ILocalizationService _localizationService;
+@inject App.Services.Helpers.IDateTimeHelper _dateTimeHelper;
+@inject App.Services.Common.IPriceFormatter _priceFormatter;
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <style>
+        html {
+            font-size: 12px;
+            font-family: 'DejaVu Sans', 'Arial' , sans-serif;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            flex-basis: 100%;
+            flex: 1;
+        }
+
+        .col-container {
+            display: table;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+            .col-container .column {
+                display: table-cell;
+            }
+
+            .col-container .right.column img {
+                margin-top: 25px;
+            }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+            table tr th {
+                background-color: #f5f5f5;
+                text-align: left;
+                padding: 5px;
+            }
+
+            table tr,
+            table tr td,
+            table tr th {
+                border: 1px solid black;
+                border-collapse: collapse;
+                padding: 5px;
+            }
+
+        .summary {
+            margin-top: 20px;
+        }
+
+        .right {
+            float: right;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        table.hide-border {
+            border: none;
+        }
+
+            table.hide-border tr,
+            table.hide-border tr td.hide-border,
+            table.hide-border tr th.hide-border {
+                border: none;
+            }
+    </style>
+
+</head>
+
+<body>
+    <div>
+        <table class="hide-border">
+            <tbody>
+                <tr style="text-align: center;font-weight: 600;text-decoration: underline;">
+                    <td class="hide-border">
+                        <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Panels.Title1"))</div>
+                        <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Panels.Title2"))</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="hide-border" style="width: 80%;  padding-left: 20%;">
+            <colgroup>
+                <col style="width: 50%;" />
+                <col style="width: 50%;" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td style="text-align: right;">@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.ApprovalLimit"))</td>
+                    <td style="text-align: left; color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.ApprovalLimit, true))</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SerialName"))</td>
+                    <td style="text-align: left;">
+                        <table class="hide-border">
+                            <tbody>
+                                <tr>
+                                    <td class="hide-border" style="width: 50%; padding: 0; color: blue;">@Model.Doc.SerialName</td>
+                                    <td class="hide-border" style="width: 50%;padding: 0;">A/A&nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SerialNo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SerialLimit"))</td>
+                    <td style="text-align: left; color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.SerialLimit, true))</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.ApprovalNumber"))</td>
+                    <td style="text-align: left; color: blue;">@Model.Doc.ApprovalNumber</td>
+                </tr>
+                <tr>
+                    <td style="text-align: right;">@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.ApprovalExpiryDate"))</td>
+                    <td style="text-align: left; color: blue;">@((await _dateTimeHelper.ConvertToUserTimeAsync(Model.Doc.ApprovalExpiryDate)).ToString("dd/MM/yyyy"))</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="hide-border" style="padding: 0 24px;">
+            <colgroup>
+                <col style="width: 80%;" />
+                <col style="width: 20%;" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td colspan="2" class="hide-border" style="font-weight: 600;text-decoration: underline;padding: 10px;">
+                        <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Panels.TraderItems"))</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderFullName"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderFullName</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderProfessionalActivity"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderProfessionalActivity</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderAddress"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderAddress</span>
+                    </td>
+                    <td class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderStreetNumber"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderStreetNumber</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 0;">
+                        <table class="hide-border">
+                            <colgroup>
+                                <col style="width: 30%;" />
+                                <col style="width: 70%;" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderPostcode"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderPostcode</span>
+                                    </td>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderCity"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderCity</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 0;">
+                        <table class="hide-border">
+                            <colgroup>
+                                <col style="width: 30%;" />
+                                <col style="width: 70%;" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderVat"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderVat</span>
+                                    </td>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TraderDoy"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.TraderDoy</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="hide-border" style="padding: 0 24px;">
+            <colgroup>
+                <col style="width: 80%;" />
+                <col style="width: 20%;" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <td colspan="2" class="hide-border" style="font-weight: 600;text-decoration: underline;padding: 10px;">
+                        <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Panels.SupplierItems"))</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierFullName"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierFullName</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierProfessionalActivity"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierProfessionalActivity</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierAddress"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierAddress</span>
+                    </td>
+                    <td class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierStreetNumber"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierStreetNumber</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 0;">
+                        <table class="hide-border">
+                            <colgroup>
+                                <col style="width: 30%;" />
+                                <col style="width: 70%;" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierPostcode"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierPostcode</span>
+                                    </td>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierCity"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierCity</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="hide-border" style="padding: 0;">
+                        <table class="hide-border">
+                            <colgroup>
+                                <col style="width: 30%;" />
+                                <col style="width: 70%;" />
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierVat"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierVat</span>
+                                    </td>
+                                    <td class="hide-border" style="padding: 10px;">
+                                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.SupplierDoy"))</span>
+                                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.SupplierDoy</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="hide-border" style="padding: 0 24px;">
+            <tbody>
+                <tr style="padding: 10px;">
+                    <td class="hide-border" style="padding: 10px;">
+                        <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.Customs"))</span>
+                        &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.Customs</span>
+                    </td>
+                </tr>
+                <tr style="padding: 10px;">
+                    <td class="hide-border" style="padding: 10px; font-weight: 600; text-decoration: underline;">
+                        <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Panels.LimitItems"))</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="margin: 10px;padding: 0 24px;">
+
+            <table>
+                <colgroup>
+                    <col style="width: 70%;" />
+                    <col style="width: 30%;" />
+                </colgroup>
+                <tbody>
+                    <tr style="padding: 10px;">
+                        <td style="font-weight: 600;">
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.LimitBalance"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.LimitBalance, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td>
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.ReturnDiscount"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.ReturnDiscount, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td>
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TransferFromSeries"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.TransferFromSeries, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td>
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.TransferToSeries"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.TransferToSeries, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td>
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.AdjustedLimit"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.AdjustedLimit, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td style="font-weight: 600;">
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.CurrentTransaction"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.CurrentTransaction, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td colspan="2">
+                            <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.CurrentTransactionAlphabet"))</span>
+                            &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.CurrentTransactionAlphabet</span>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td style="font-weight: 600;">
+                            <div>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.CurrentLimit"))</div>
+                        </td>
+                        <td style="text-align: right;padding-right: 20px;">
+                            <div style="color: blue;">@(await _priceFormatter.FormatPriceAsync(Model.Doc.CurrentLimit, true))</div>
+                        </td>
+                    </tr>
+                    <tr style="padding: 10px;">
+                        <td colspan="2">
+                            <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.CurrentLimitAlphabet"))</span>
+                            &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.CurrentLimitAlphabet</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="hide-border">
+                <colgroup>
+                    <col style="width: 50%;" />
+                    <col style="width: 50%;" />
+                </colgroup>
+                <tbody>
+                    <tr style="padding: 10px;">
+                        <td class="hide-border">
+                            <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.DocumentCity"))</span>
+                            &nbsp;:&nbsp;<span style="color: blue;">@Model.Doc.DocumentCity</span>
+                        </td>
+                        <td class="hide-border" style="text-align: right;">
+                            <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Fields.CreatedDate"))</span>
+                            &nbsp;:&nbsp;<span style="color: blue;">@((await _dateTimeHelper.ConvertToUserTimeAsync(Model.Doc.CreatedDate.Value)).ToString("dd/MM/yyyy"))</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px;">
+                <table class="hide-border" style="text-align: center;">
+                    <colgroup>
+                        <col style="width: 50%;" />
+                        <col style="width: 50%;" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td class="hide-border">
+                                <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Extra.Publisher"))</span>
+                            </td>
+                            <td class="hide-border">
+                                <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Extra.Recipient"))</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <table class="hide-border" style="text-align: center;">
+                    <colgroup>
+                        <col style="width: 50%;" />
+                        <col style="width: 50%;" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td class="hide-border">
+                                <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Extra.SignMark"))</span>
+                            </td>
+                            <td class="hide-border">
+                                <span>@(await _localizationService.GetResourceAsync("App.Models.VatExemptionDocModel.Extra.SignMark"))</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

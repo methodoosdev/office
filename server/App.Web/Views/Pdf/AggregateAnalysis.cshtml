@@ -1,0 +1,201 @@
+﻿@using App.Models.Accounting;
+@using App.Services.Common.Pdf;
+@model ((IList<AggregateAnalysisModel> List, IList<AggregateAnalysisModel> ProgressList, IList<AggregateAnalysisTotalModel> TotalList), HtmlPdfItem Item);
+@inject App.Services.Localization.ILocalizationService _localizationService;
+@inject App.Services.Helpers.IDateTimeHelper _dateTimeHelper;
+@inject App.Services.Common.IPriceFormatter _priceFormatter;
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <style>
+        html {
+            font-size: 11px;
+            font-family: 'DejaVu Sans', 'Arial', sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-collapse: collapse;
+        }
+
+            table tr th {
+                background-color: #f5f5f5;
+                text-align: left;
+                padding: 5px;
+            }
+
+            table tr,
+            table tr td,
+            table tr th {
+                border: 1px solid #e0e0e0;
+                border-collapse: collapse;
+                padding: 5px;
+            }
+    </style>
+
+</head>
+
+<body>
+    @{ var i = 0; }
+
+    <p style="text-align: right;">
+        <div>@((await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("dd/MM/yyyy"))</div>
+    </p>
+
+    <p>
+        <span style="font-size: 16px;">@Model.Item.SubTitle - @Model.Item.Title</span>
+    </p>
+
+    <br />
+
+    <table>
+        <thead>
+            <tr style="background-color: white;">
+                <td colspan="14">
+                    <div style="font-size: 12px;">@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Title1"))</div>
+                </td>
+            </tr>
+            <tr>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Date"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Sales"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SalesExports"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SalesReturns"))</th>
+                @* <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SalesTotal"))</th> *@
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Orders"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Purchases"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.PurchasesImports"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.PurchasesReturns"))</th>
+                @* <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.PurchasesTotal"))</th> *@
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.CustomerBalance"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SuppliersBalance"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.WarehouseBalance"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Receipts"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Payments"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Expenses"))</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Item1.List)
+            {
+<tr>
+    <td style="text-align:left;">@item.Date</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Sales))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SalesExports))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SalesReturns))</td>
+    @* <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SalesTotal))</td> *@
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Orders))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Purchases))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PurchasesImports))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PurchasesReturns))</td>
+    @* <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PurchasesTotal))</td> *@
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.CustomerBalance))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SuppliersBalance))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.WarehouseBalance))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Receipts))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Payments))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Expenses))</td>
+</tr>
+ if (Model.Item1.List.Count() - 1 > i)
+{
+    <span style="display:block; clear:both; page-break-after:always;"></span>
+}
+i++;
+}
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr style="background-color: white;">
+                <td colspan="14">
+                    <div style="font-size: 12px;">@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Title2"))</div>
+                </td>
+            </tr>
+            <tr>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Date"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Sales"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SalesExports"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SalesReturns"))</th>
+                @* <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SalesTotal"))</th> *@
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Orders"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Purchases"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.PurchasesImports"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.PurchasesReturns"))</th>
+                @* <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.PurchasesTotal"))</th> *@
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.CustomerBalance"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.SuppliersBalance"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.WarehouseBalance"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Receipts"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Payments"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Columns.Expenses"))</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Item1.ProgressList)
+            {
+                <tr>
+                    <td style="text-align:left;">@item.Date</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Sales))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SalesExports))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SalesReturns))</td>
+                    @* <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SalesTotal))</td> *@
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Orders))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Purchases))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PurchasesImports))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PurchasesReturns))</td>
+                    @* <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PurchasesTotal))</td> *@
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.CustomerBalance))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.SuppliersBalance))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.WarehouseBalance))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Receipts))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Payments))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Expenses))</td>
+                </tr>
+                if (Model.Item1.List.Count() - 1 > i)
+                {
+                    <span style="display:block; clear:both; page-break-after:always;"></span>
+                }
+                i++;
+            }
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr style="background-color: white;">
+                <td colspan="14">
+                    <div style="font-size: 12px;">@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisModel.Title3"))</div>
+                </td>
+            </tr>
+            <tr>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisTotalModel.Columns.Cash"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisTotalModel.Columns.Bank"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisTotalModel.Columns.Term"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisTotalModel.Columns.Else"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.AggregateAnalysisTotalModel.Columns.Vat"))</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Item1.TotalList)
+            {
+                <tr>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Cash))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Bank))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Term))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Else))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Vat))</td>
+                </tr>
+                if (Model.Item1.List.Count() - 1 > i)
+                {
+                    <span style="display:block; clear:both; page-break-after:always;"></span>
+                }
+                i++;
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

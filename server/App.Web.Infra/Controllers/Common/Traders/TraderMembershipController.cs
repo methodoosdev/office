@@ -1,0 +1,156 @@
+﻿using App.Core.Domain.Traders;
+using App.Framework.Infrastructure.Mapper.Extensions;
+using App.Models.Traders;
+using App.Services.Localization;
+using App.Services.Traders;
+using App.Web.Framework.Controllers;
+using App.Web.Framework.Mvc.Filters;
+using App.Web.Infra.Factories.Common.Traders;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace App.Web.Infra.Controllers.Common.Traders
+{
+    [CheckCustomerPermission(true)]
+    public partial class TraderMembershipController : BaseProtectController
+    {
+        private readonly ITraderMembershipService _traderMembershipService;
+        private readonly ILocalizationService _localizationService;
+        private readonly ITraderMembershipModelFactory _traderMembershipModelFactory;
+
+        public TraderMembershipController(
+            ITraderMembershipService traderMembershipService,
+            ILocalizationService localizationService,
+            ITraderMembershipModelFactory traderMembershipModelFactory)
+        {
+            _traderMembershipService = traderMembershipService;
+            _localizationService = localizationService;
+            _traderMembershipModelFactory = traderMembershipModelFactory;
+        }
+
+        public virtual async Task<IActionResult> List()
+        {
+            //prepare model
+            var searchModel = await _traderMembershipModelFactory.PrepareTraderMembershipSearchModelAsync(new TraderMembershipSearchModel());
+
+            return Json(new { searchModel });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> List([FromBody] TraderMembershipSearchModel searchModel, int parentId)
+        {
+            //prepare model
+            var model = await _traderMembershipModelFactory.PrepareTraderMembershipListModelAsync(searchModel, parentId);
+
+            return Json(model);
+        }
+
+        public virtual async Task<IActionResult> Create()
+        {
+            //prepare model
+            var model = await _traderMembershipModelFactory.PrepareTraderMembershipModelAsync(new TraderMembershipModel(), null);
+
+            //prepare form
+            var formModel = await _traderMembershipModelFactory.PrepareTraderMembershipFormModelAsync(new TraderMembershipFormModel());
+
+            return Json(new { model, formModel });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> Create([FromBody] TraderMembershipModel model, int parentId)
+        {
+            if (ModelState.IsValid)
+            {
+                var traderMembership = model.ToEntity<TraderMembership>();
+                traderMembership.TraderId = parentId;
+                await _traderMembershipService.InsertTraderMembershipAsync(traderMembership);
+
+                return Json(traderMembership.Id);
+            }
+
+            //if we got this far, something failed, redisplay form
+            return BadRequestFromModel();
+        }
+
+        public virtual async Task<IActionResult> Edit(int id)
+        {
+            //try to get entity with the specified id
+            var traderMembership = await _traderMembershipService.GetTraderMembershipByIdAsync(id);
+            if (traderMembership == null)
+                return await AccessDenied();
+
+            //prepare model
+            var model = await _traderMembershipModelFactory.PrepareTraderMembershipModelAsync(null, traderMembership);
+
+            //prepare form
+            var formModel = await _traderMembershipModelFactory.PrepareTraderMembershipFormModelAsync(new TraderMembershipFormModel());
+
+            return Json(new { model, formModel });
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> Edit([FromBody] TraderMembershipModel model)
+        {
+            //try to get entity with the specified id
+            var traderMembership = await _traderMembershipService.GetTraderMembershipByIdAsync(model.Id);
+            if (traderMembership == null)
+                return await AccessDenied();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    traderMembership = model.ToEntity(traderMembership);
+                    await _traderMembershipService.UpdateTraderMembershipAsync(traderMembership);
+
+                    return Json(traderMembership.Id);
+                }
+
+                //if we got this far, something failed, redisplay form
+                return BadRequestFromModel();
+            }
+            catch
+            {
+                return await BadRequestMessageAsync("App.Models.TraderMemberships.Errors.TryToEdit");
+            }
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> Delete(int id)
+        {
+            //try to get a customer role with the specified id
+            var traderMembership = await _traderMembershipService.GetTraderMembershipByIdAsync(id);
+            if (traderMembership == null)
+                return await AccessDenied();
+
+            try
+            {
+                await _traderMembershipService.DeleteTraderMembershipAsync(traderMembership);
+
+                return Ok();
+            }
+            catch
+            {
+                return await BadRequestMessageAsync("App.Models.TraderMemberships.Errors.TryToDelete");
+            }
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> DeleteSelected([FromBody] ICollection<int> selectedIds)
+        {
+            try
+            {
+                if (selectedIds != null)
+                    await _traderMembershipService.DeleteTraderMembershipAsync((await _traderMembershipService.GetTraderMembershipsByIdsAsync(selectedIds.ToArray())).ToList());
+
+                return Ok();
+            }
+            catch
+            {
+                return await BadRequestMessageAsync("App.Models.TraderMemberships.Errors.TryToDelete");
+            }
+        }
+    }
+}

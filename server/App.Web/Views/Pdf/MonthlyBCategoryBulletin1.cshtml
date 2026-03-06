@@ -1,0 +1,119 @@
+﻿@using App.Models.Accounting;
+@using App.Services.Common.Pdf;
+@model (IList<MonthlyBCategoryBulletinPdfModel> List1, HtmlPdfItem Item2);
+@inject App.Services.Localization.ILocalizationService _localizationService;
+@inject App.Services.Helpers.IDateTimeHelper _dateTimeHelper;
+@inject App.Services.Common.IPriceFormatter _priceFormatter;
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <style>
+        html {
+            font-size: 12px;
+            font-family: 'DejaVu Sans', 'Arial', sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-collapse: collapse;
+        }
+
+            table tr th {
+                background-color: #f5f5f5;
+                text-align: left;
+                padding: 5px;
+            }
+
+            table tr,
+            table tr td,
+            table tr th {
+                border: 1px solid #e0e0e0;
+                border-collapse: collapse;
+                padding: 5px;
+            }
+    </style>
+
+</head>
+
+<body>
+    @{
+        var i = 0;
+    }
+
+    <p style="text-align: right;">
+        <div>@((await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("dd/MM/yyyy"))</div>
+    </p>
+
+    <p>
+        <span style="font-size: 16px;">@Model.Item2.SubTitle - @Model.Item2.Title</span>
+    </p>
+
+    <br />
+
+    <table>
+        <colgroup>
+            <col />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.Description"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.January"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.February"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.March"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.April"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.May"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.June"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.July"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.August"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.September"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.October"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.November"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.December"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyBCategoryBulletinPdfModel.Columns.Total"))</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List1)
+            {
+                <tr>
+                    <td>@item.Description</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.January))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.February))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.March))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.April))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.May))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.June))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.July))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.August))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.September))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.October))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.November))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.December))</td>
+                    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.Total))</td>
+                </tr>
+                if (Model.List1.Count() - 1 > i)
+                {
+                    <span style="display:block; clear:both; page-break-after:always;"></span>
+                }
+                i++;
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

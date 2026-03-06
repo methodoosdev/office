@@ -1,0 +1,719 @@
+﻿{
+  "label": "root",
+  "items": [
+    {
+      "label": "Accounting",
+      "icon": "pi pi-fw pi-database",
+      "items": [
+        {
+          "label": "Periodicity items",
+          "routerLink": [
+            "/office/periodicity-items"
+          ],
+          "action": "Protect:PeriodicityItems:List"
+        },
+        {
+          "label": "Monthly financial bulletin C'category",
+          "routerLink": [
+            "/office/monthly-financial-bulletin"
+          ],
+          "action": "Protect:MonthlyFinancialBulletin:List"
+        },
+        {
+          "label": "Monthly financial bulletin B'category",
+          "routerLink": [
+            "/office/monthly-bCategory"
+          ],
+          "action": "Protect:MonthlyBCategoryBulletin:List"
+        },
+        {
+          "label": "Cash available",
+          "routerLink": [
+            "/office/cash-available"
+          ],
+          "action": "Protect:CashAvailable:List"
+        },
+        {
+          "label": "Aggregate analysis",
+          "routerLink": [
+            "/office/aggregate-analysis"
+          ],
+          "action": "Protect:AggregateAnalysis:List"
+        },
+        {
+          "label": "Vat calculation",
+          "routerLink": [
+            "/office/vat-calculation"
+          ],
+          "action": "Protect:VatCalculation:List"
+        },
+        {
+          "label": "Vat transference",
+          "routerLink": [
+            "/office/vat-transference"
+          ],
+          "action": "Protect:VatTransference:List"
+        },
+        {
+          "label": "Intrastat - Vies",
+          "items": [
+            {
+              "label": "Listing F4",
+              "routerLink": [
+                "/office/listingF4"
+              ],
+              "action": "Protect:ListingF4:List"
+            },
+            {
+              "label": "Listing F5",
+              "routerLink": [
+                "/office/listingF5"
+              ],
+              "action": "Protect:ListingF5:List"
+            }
+          ]
+        },
+        {
+          "label": "Electronic transmisson",
+          "items": [
+            {
+              "label": "Ε-Send",
+              "routerLink": [
+                "/office/eSend"
+              ],
+              "action": "Protect:ESend:List"
+            },
+            {
+              "label": "MyData",
+              "routerLink": [
+                "/office/myData"
+              ],
+              "action": "Protect:MyData:List"
+            },
+            {
+              "label": "MyData records",
+              "routerLink": [
+                "/office/myData-item"
+              ],
+              "action": "Protect:MyDataItem:List"
+            }
+          ]
+        },
+        {
+          "label": "Payroll",
+          "items": [
+            {
+              "label": "Payroll check",
+              "routerLink": [
+                "/office/payroll-check"
+              ],
+              "action": "Protect:PayrollCheck:List"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Financially",
+      "icon": "pi pi-fw pi-box",
+      "items": [
+        {
+          "label": "Banking transactions",
+          "routerLink": [
+            "/office/banking-transactions"
+          ],
+          "action": "Protect:BankingTransactions:List"
+        },
+        {
+          "label": "Piraeus transactions",
+          "routerLink": [
+            "/office/piraeus-transactions"
+          ],
+          "action": "Protect:PiraeusTransactions:List"
+        },
+        {
+          "label": "Numerical indicators",
+          "items": [
+            {
+              "label": "Payoff liabilities",
+              "routerLink": [
+                "/office/payoff-liabilities"
+              ],
+              "action": "Protect:PayoffLiabilities:List"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Tax",
+      "icon": "pi pi-fw pi-wallet",
+      "items": [
+        {
+          "label": "Financial obligation",
+          "routerLink": [
+            "/office/financial-obligation"
+          ],
+          "action": "Protect:FinancialObligation:List"
+        }
+      ]
+    },
+    {
+      "label": "Especially",
+      "icon": "pi pi-fw pi-tablet",
+      "items": [
+        {
+          "label": "Projects list",
+          "items": [
+            {
+              "label": "View projects",
+              "routerLink": [
+                "/office/softone-project"
+              ],
+              "action": "Protect:SoftoneProject:Preview"
+            },
+            {
+              "label": "Projects statistic",
+              "routerLink": [
+                "/office/softone-project-statistic"
+              ],
+              "action": "Protect:SoftoneProjectStatistic:Preview"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Payroll",
+      "icon": "pi pi-fw pi-money-bill",
+      "items": [
+        {
+          "label": "Worker catalog",
+          "routerLink": [
+            "/office/worker-catalog-by-trader"
+          ],
+          "action": "Protect:WorkerCatalogByTrader:List",
+          "roles": [
+            "Traders"
+          ]
+        },
+        {
+          "label": "Schedules",
+          "roles": [
+            "Employees",
+            "Traders"
+          ],
+          "items": [
+            {
+              "label": "Schedule submit",
+              "routerLink": [
+                "/office/worker-schedule-by-employee"
+              ],
+              "action": "Protect:WorkerScheduleByEmployee:List"
+            },
+            {
+              "label": "Schedule submit",
+              "routerLink": [
+                "/office/worker-schedule-by-trader"
+              ],
+              "action": "Protect:WorkerScheduleByTrader:List"
+            },
+            {
+              "label": "Shifts",
+              "routerLink": [
+                "/office/worker-schedule-shift-by-trader"
+              ],
+              "action": "Protect:WorkerScheduleShiftByTrader:List"
+            },
+            {
+              "label": "Schedule info",
+              "routerLink": [
+                "/office/worker-schedule-log"
+              ],
+              "action": "Protect:WorkerScheduleLog:List"
+            },
+            {
+              "label": "Schedule pending",
+              "routerLink": [
+                "/office/worker-schedule-pending"
+              ],
+              "action": "Protect:WorkerSchedulePending:List"
+            }
+          ]
+        },
+        {
+          "label": "Leaves",
+          "items": [
+            {
+              "label": "Rest sick leave days",
+              "routerLink": [
+                "/office/worker-sick-leave"
+              ],
+              "action": "Protect:WorkerSickLeave:List"
+            },
+            {
+              "label": "Rest of leave days",
+              "routerLink": [
+                "/office/worker-leave"
+              ],
+              "action": "Protect:WorkerLeave:List"
+            },
+            {
+              "label": "menu.workerLeaveDetail",
+              "routerLink": [
+                "/office/worker-leave-detail"
+              ],
+              "action": "Protect:WorkerLeaveDetail:List"
+            }
+          ]
+        },
+        {
+          "label": "Submissions",
+          "items": [
+            {
+              "label": "APD Submissions",
+              "routerLink": [
+                "/office/apd-submission"
+              ],
+              "action": "Protect:ApdSubmission:List"
+            },
+            {
+              "label": "FMY Submissions",
+              "routerLink": [
+                "/office/fmy-submission"
+              ],
+              "action": "Protect:FmySubmission:List"
+            }
+          ]
+        },
+        {
+          "label": "Obligations",
+          "items": [
+            {
+              "label": "Apd Contribution",
+              "routerLink": [
+                "/office/apd-contribution"
+              ],
+              "action": "Protect:ApdContribution:List"
+            },
+            {
+              "label": "Fmy Contribution",
+              "routerLink": [
+                "/office/fmy-contribution"
+              ],
+              "action": "Protect:FmyContribution:List"
+            }
+          ]
+        },
+        {
+          "label": "Payroll status",
+          "routerLink": [
+            "/office/payroll-status"
+          ],
+          "action": "Protect:PayrollStatus:List"
+        },
+        {
+          "label": "Εmployee Cost Calculation",
+          "routerLink": [
+            "/office/employee-cost-calculation"
+          ],
+          "action": "Protect:EmployeeCostCalculation:List"
+        }
+      ]
+    },
+    {
+      "label": "Administratively",
+      "icon": "pi pi-fw pi-sitemap",
+      "items": [
+        {
+          "label": "Email manager",
+          "routerLink": [
+            "/office/email-message"
+          ],
+          "action": "Protect:EmailMessage:List"
+        },
+        {
+          "label": "Activity logs",
+          "routerLink": [
+            "/office/customer-activity"
+          ],
+          "action": "Protect:CustomerActivity:List"
+        },
+        {
+          "label": "Trader activity",
+          "routerLink": [
+            "/office/trader-activity-log"
+          ],
+          "action": "Protect:TraderActivityLog:List"
+        },
+        {
+          "label": "Employee activity",
+          "routerLink": [
+            "/office/employee-activity-log"
+          ],
+          "action": "Protect:EmployeeActivityLog:List"
+        },
+        {
+          "label": "CRM",
+          "items": [
+            {
+              "label": "Task manager",
+              "routerLink": [
+                "/office/simple-task-manager"
+              ],
+              "action": "Protect:SimpleTaskManager:List"
+            },
+            {
+              "label": "Categories",
+              "routerLink": [
+                "/office/simple-task-category"
+              ],
+              "action": "Protect:SimpleTaskCategory:List"
+            },
+            {
+              "label": "Departments",
+              "routerLink": [
+                "/office/simple-task-department"
+              ],
+              "action": "Protect:SimpleTaskAssignmentPrototypeAction:List"
+            },
+            {
+              "label": "Nature objects",
+              "routerLink": [
+                "/office/simple-task-nature"
+              ],
+              "action": "Protect:SimpleTaskNature:List"
+            },
+            {
+              "label": "Sectors",
+              "routerLink": [
+                "/office/simple-task-sector"
+              ],
+              "action": "Protect:SimpleTaskSector:List"
+            }
+          ]
+        },
+        {
+          "label": "Tasks",
+          "items": [
+            {
+              "label": "Assignment tasks",
+              "routerLink": [
+                "/office/assignment-task"
+              ],
+              "action": "Protect:AssignmentTask:List"
+            },
+            {
+              "label": "Assignment actions",
+              "routerLink": [
+                "/office/assignment-task-action-by-employee"
+              ],
+              "action": "Protect:AssignmentTaskActionByEmployee:List",
+              "roles": [
+                "Employees"
+              ]
+            },
+            {
+              "label": "Prototype tasks",
+              "routerLink": [
+                "/office/assignment-prototype"
+              ],
+              "action": "Protect:AssignmentPrototype:List"
+            },
+            {
+              "label": "Prototype actions",
+              "routerLink": [
+                "/office/assignment-prototype-action"
+              ],
+              "action": "Protect:AssignmentPrototypeAction:List"
+            },
+            {
+              "label": "Reason Tasks",
+              "routerLink": [
+                "/office/assignment-reason"
+              ],
+              "action": "Protect:AssignmentReason:List"
+            }
+          ]
+        },
+        {
+          "label": "Trader rating",
+          "items": [
+            {
+              "label": "Rating - Categories",
+              "routerLink": [
+                "/office/trader-rating-category"
+              ],
+              "action": "Protect:TraderRatingCategory:List"
+            },
+            {
+              "label": "Rating - Gravity",
+              "routerLink": [
+                "/office/trader-rating"
+              ],
+              "action": "Protect:TraderRating:List"
+            },
+            {
+              "label": "Rating by employees",
+              "routerLink": [
+                "/office/trader-rating-report",
+                "by-employee"
+              ],
+              "action": "Protect:TraderRatingReport:ByEmployee"
+            },
+            {
+              "label": "Rating by departments",
+              "routerLink": [
+                "/office/trader-rating-report",
+                "by-department"
+              ],
+              "action": "Protect:TraderRatingReport:ByDepartment"
+            },
+            {
+              "label": "Rating by traders",
+              "routerLink": [
+                "/office/trader-rating-report",
+                "by-trader"
+              ],
+              "action": "Protect:TraderRatingReport:ByTrader"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Catalog",
+      "icon": "pi pi-fw pi-users",
+      "items": [
+        {
+          "label": "Traders",
+          "routerLink": [
+            "/office/trader"
+          ],
+          "action": "Protect:Trader:List"
+        },
+        {
+          "label": "Employees",
+          "routerLink": [
+            "/office/employee"
+          ],
+          "action": "Protect:Employee:List"
+        },
+        {
+          "label": "Users",
+          "routerLink": [
+            "/office/customer"
+          ],
+          "action": "Admin:Customer:List"
+        },
+        {
+          "label": "Online users",
+          "routerLink": [
+            "/office/customer-online"
+          ],
+          "action": "Protect:CustomerOnline:List"
+        }
+      ]
+    },
+    {
+      "label": "Settings",
+      "icon": "pi pi-fw pi-cog",
+      "items": [
+        {
+          "label": "Email accounts",
+          "routerLink": [
+            "/office/email-account"
+          ],
+          "action": "Admin:EmailAccount:List"
+        }
+      ]
+    },
+    {
+      "label": "Security",
+      "icon": "pi pi-fw pi-volume-up",
+      "items": [
+        {
+          "label": "Customer roles",
+          "routerLink": [
+            "/office/customer-role"
+          ],
+          "action": "Admin:CustomerRole:List"
+        },
+        {
+          "label": "Users permissions",
+          "routerLink": [
+            "/office/customer-permission"
+          ],
+          "action": "Admin:CustomerPermission:List"
+        }
+      ]
+    },
+    {
+      "label": "Content managment",
+      "icon": "pi pi-fw pi-database",
+      "items": []
+    },
+    {
+      "label": "Configuration",
+      "icon": "pi pi-fw pi-wrench",
+      "items": [
+        {
+          "label": "Activity types",
+          "routerLink": [
+            "/office/activity-log-type"
+          ],
+          "action": "Admin:ActivityLogType:List"
+        },
+        {
+          "label": "Trader group",
+          "routerLink": [
+            "/office/trader-group"
+          ],
+          "action": "Protect:TraderGroup:List"
+        },
+        {
+          "label": "Departments",
+          "routerLink": [
+            "/office/department"
+          ],
+          "action": "Protect:AssignmentPrototypeAction:List"
+        },
+        {
+          "label": "Educations",
+          "routerLink": [
+            "/office/education"
+          ],
+          "action": "Protect:Education:List"
+        },
+        {
+          "label": "Job titles",
+          "routerLink": [
+            "/office/jobTitle"
+          ],
+          "action": "Protect:JobTitle:List"
+        },
+        {
+          "label": "Specialties",
+          "routerLink": [
+            "/office/specialty"
+          ],
+          "action": "Protect:Specialty:List"
+        },
+        {
+          "label": "Accounting works",
+          "routerLink": [
+            "/office/accounting-work"
+          ],
+          "action": "Protect:AccountingWork:List"
+        },
+        {
+          "label": "Working areas",
+          "routerLink": [
+            "/office/working-area"
+          ],
+          "action": "Protect:WorkingArea:List"
+        },
+        {
+          "label": "Chambers",
+          "routerLink": [
+            "/office/chamber"
+          ],
+          "action": "Protect:Chamber:List"
+        },
+        {
+          "label": "Periodicity items",
+          "routerLink": [
+            "/office/periodicity-item"
+          ],
+          "action": "Protect:PeriodicityItem:List"
+        },
+        {
+          "label": "Βookmark",
+          "routerLink": [
+            "/office/bookmark"
+          ],
+          "action": "Protect:Bookmark:List"
+        },
+        {
+          "label": "Tax factors",
+          "routerLink": [
+            "/office/tax-factor"
+          ],
+          "action": "Protect:TaxFactor:List"
+        }
+      ]
+    },
+    {
+      "label": "System",
+      "icon": "pi pi-fw pi-android",
+      "items": [
+        {
+          "label": "Languages",
+          "routerLink": [
+            "/office/language"
+          ],
+          "action": "Admin:Language:List"
+        },
+        {
+          "label": "Logs",
+          "routerLink": [
+            "/office/log"
+          ],
+          "action": "Admin:Log:List"
+        },
+        {
+          "label": "Schedule tasks",
+          "routerLink": [
+            "/office/schedule-task"
+          ],
+          "action": "Admin:ScheduleTask:List"
+        },
+        {
+          "label": "Mails for delivery",
+          "routerLink": [
+            "/office/queued-email"
+          ],
+          "action": "Admin:QueuedEmail:List"
+        }
+      ]
+    },
+    {
+      "label": "Vat exemption doc",
+      "icon": "pi pi-fw pi-file",
+      "roles": [
+        "Employees",
+        "Traders"
+      ],
+      "items": [
+        {
+          "label": "Vat exemption approval",
+          "routerLink": [
+            "/office/vat-exemption-approval"
+          ],
+          "action": "Protect:VatExemptionApproval:List"
+        },
+        {
+          "label": "Vat exemption report",
+          "routerLink": [
+            "/office/vat-exemption-report"
+          ],
+          "action": "Protect:VatExemptionReport:List"
+        },
+        {
+          "label": "Vat exemption serial",
+          "routerLink": [
+            "/office/vat-exemption-serial"
+          ],
+          "action": "Protect:VatExemptionSerial:List"
+        },
+        {
+          "label": "Vat exemption doc",
+          "routerLink": [
+            "/office/vat-exemption-doc"
+          ],
+          "action": "Protect:VatExemptionDoc:List"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+﻿using App.Framework.Models;
+using System;
+
+namespace App.Models.Accounting
+{
+    public partial record PeriodicF2SearchModel : BaseSearchModel
+    {
+        public PeriodicF2SearchModel() : base("f002", "desc") { }
+    }
+    public partial record PeriodicF2ListModel : BasePagedListModel<PeriodicF2Model>
+    {
+    }
+    public partial record PeriodicF2Model : BaseNopEntityModel
+    {
+        public string TaxPeriodName { get; set; }
+        public string SubmitModeTypeIdName { get; set; }
+        public string F523TypeIdName { get; set; }
+        public string F007Name { get; set; }
+        public string F002Value { get; set; }
+        public string F005aValue { get; set; }
+        public string F005bValue { get; set; }
+        public string EmployeeName { get; set; }
+
+        public int TraderId { get; set; }
+        public int SubmitModeTypeId { get; set; }
+        public string RegistrationNumber { get; set; }
+        public decimal F502Previous { get; set; }
+        public decimal F503Previous { get; set; }
+        public decimal F511Previous { get; set; }
+        public decimal F387Calc { get; set; }
+        public decimal F337Calc { get; set; }
+        public decimal F5402Calc { get; set; }
+        public string F001a { get; set; }
+        public int F001b { get; set; }
+        public DateTime F002 { get; set; }
+        public int F003 { get; set; }
+        public int F004 { get; set; }
+        public DateTime F005a { get; set; }
+        public DateTime F005b { get; set; }
+        public int F006 { get; set; }
+        public bool F007 { get; set; }
+        public bool F008 { get; set; }
+        public bool F009 { get; set; }
+        public string F101 { get; set; }
+        public string F102 { get; set; }
+        public string F103 { get; set; }
+        public string F104 { get; set; }
+        public decimal F301 { get; set; }
+        public decimal F302 { get; set; }
+        public decimal F303 { get; set; }
+        public decimal F304 { get; set; }
+        public decimal F305 { get; set; }
+        public decimal F306 { get; set; }
+        public decimal F307 { get; set; }
+        public decimal F342 { get; set; }
+        public decimal F345 { get; set; }
+        public decimal F348 { get; set; }
+        public decimal F349 { get; set; }
+        public decimal F310 { get; set; }
+        public decimal F311 { get; set; }
+        public decimal F312 { get; set; }
+        public decimal F331 { get; set; }
+        public decimal F332 { get; set; }
+        public decimal F333 { get; set; }
+        public decimal F334 { get; set; }
+        public decimal F335 { get; set; }
+        public decimal F336 { get; set; }
+        public decimal F337 { get; set; }
+        public decimal F361 { get; set; }
+        public decimal F362 { get; set; }
+        public decimal F363 { get; set; }
+        public decimal F364 { get; set; }
+        public decimal F365 { get; set; }
+        public decimal F366 { get; set; }
+        public decimal F367 { get; set; }
+        public decimal F381 { get; set; }
+        public decimal F382 { get; set; }
+        public decimal F383 { get; set; }
+        public decimal F384 { get; set; }
+        public decimal F385 { get; set; }
+        public decimal F386 { get; set; }
+        public decimal F387 { get; set; }
+        public decimal F400 { get; set; }
+        public decimal F402 { get; set; }
+        public decimal F407 { get; set; }
+        public decimal F410 { get; set; }
+        public decimal F411 { get; set; }
+        public decimal F422 { get; set; }
+        public decimal F423 { get; set; }
+        public decimal F428 { get; set; }
+        public decimal F430 { get; set; }
+        public decimal F470 { get; set; }
+        public decimal F480 { get; set; }
+        public decimal F401 { get; set; }
+        public decimal F403 { get; set; }
+        public decimal F404 { get; set; }
+        public decimal F502 { get; set; }
+        public decimal F503 { get; set; }
+        public decimal F483 { get; set; }
+        public decimal F505 { get; set; }
+        public decimal F511 { get; set; }
+        public int F523 { get; set; }
+        public bool F5071 { get; set; }
+        public bool F5072 { get; set; }
+        public bool F5073 { get; set; }
+        public bool F5074 { get; set; }
+        public bool F5075 { get; set; }
+        public bool F5076 { get; set; }
+        public decimal F508 { get; set; }
+        public string Notes { get; set; }
+        public string Iban { get; set; }
+        public decimal F906 { get; set; }
+        public decimal F907 { get; set; }
+        public decimal F908 { get; set; }
+    }
+    public partial record PeriodicF2FormModel : BaseNopModel
+    {
+    }
+    public partial record PeriodicF2DialogFormModel : BaseNopModel
+    {
+    }
+    public partial record PeriodicF2DialogModel : BaseNopModel
+    {
+        public int TraderId { get; set; }
+        public DateTime Date { get; set; }
+        public int Period { get; set; }
+        public bool F007 { get; set; }
+        public bool Representative { get; set; }
+        public string Status { get; set; }
+        public string ConnectionId { get; set; }
+    }
+    public class TraderCategoryBookModel
+    {
+        public int TraderId { get; set; }
+        public int CategoryBookTypeId { get; set; }
+    }
+}

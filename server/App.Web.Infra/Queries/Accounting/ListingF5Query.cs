@@ -1,0 +1,126 @@
+﻿using App.Core.Domain.Traders;
+
+namespace App.Web.Infra.Queries.Accounting
+{
+    public class ListingF5Query : TraderFactoryQuery
+    {
+        public ListingF5Query(int logistikiProgramTypeId, int categoryBookTypeId) : base(logistikiProgramTypeId, categoryBookTypeId)
+        {
+        }
+
+        public override string SoftOne_C => @"
+			SELECT F.FINDOC AS InvId, F.TRNDATE AS InvDate,F.PERIOD AS Periodos, F.FINCODE AS InvSeries, 
+				SUBSTRING(B.CODE,1,5) AS Part, B.CODE AS Code, A.DEBIT-A.CREDIT AS [Value],
+				SUBSTRING(D.AFM,1,2) AS CountryCode,
+				--SUBSTRING(D.AFM,3,LEN(D.AFM)-2) AS Vat,
+				CASE 
+					WHEN LEN(D.AFM) > 2 THEN RIGHT(D.AFM, LEN(D.AFM) - 2)
+					ELSE D.AFM
+				END AS Vat,
+				D.AFM AS VatNumber,
+				F.SHIPKIND AS ShipKind
+			FROM ACNTRN A 
+				LEFT OUTER JOIN ACNT B ON A.ACNT=B.ACNT
+				LEFT OUTER JOIN ACNEDIT AS E ON A.ACNEDIT = E.ACNEDIT
+				LEFT OUTER JOIN FINDOC AS F ON E.FINDOC = F.FINDOC
+				LEFT OUTER JOIN TRDR AS D ON F.TRDR = D.TRDR
+				LEFT OUTER JOIN COUNTRY AS C ON D.COUNTRY = C.COUNTRY
+			WHERE 
+				A.ACNSCHEMA = @pSchema
+				AND A.COMPANY = @pCompanyId
+				AND A.FISCPRD = @pYear
+				AND F.PERIOD = @pPeriod
+				AND ((SUBSTRING(B.CODE,1,10) LIKE '64.__.__.2%') OR
+					(SUBSTRING(B.CODE,1,7) LIKE '20.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '24.__.2%') OR 
+					(SUBSTRING(B.CODE,1,7) LIKE '25.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '26.__.2%'))
+				 --(SUBSTRING(B.CODE,1,7) IN ('20.02.2', '20.03.2', '20.04.2','24.02.2', '24.03.2', '24.04.2','25.02.2', '25.03.2', '25.04.2','26.02.2', '26.03.2', '26.04.2')))				
+				AND (C.COUNTRYTYPE = 1)
+				AND (C.INTERCODE <> 'GR')
+			ORDER BY F.FINCODE
+        ";
+
+        public override string SoftOne_B => @"
+			SELECT F.FINDOC AS InvId, F.TRNDATE AS InvDate,F.PERIOD AS Periodos, 
+				F.FINCODE AS InvSeries, SUBSTRING(B.CODE,1,5) AS Part, B.CODE AS Code,
+				CASE WHEN FPRMS IN (30160) THEN A.NETLINEVAL * -1 ELSE A.NETLINEVAL END AS [Value],
+				SUBSTRING(D.AFM,1,2) AS CountryCode,
+				--SUBSTRING(D.AFM,3,LEN(D.AFM)-2) AS Vat,
+				CASE 
+					WHEN LEN(D.AFM) > 2 THEN RIGHT(D.AFM, LEN(D.AFM) - 2)
+					ELSE D.AFM
+				END AS Vat,
+				D.AFM AS VatNumber,
+				F.SHIPKIND AS ShipKind
+			FROM MTRLINES A 
+				LEFT OUTER JOIN MTRL B ON A.MTRL=B.MTRL
+				LEFT OUTER JOIN FINDOC F ON F.FINDOC=A.FINDOC
+				LEFT OUTER JOIN TRDR AS D ON F.TRDR = D.TRDR 
+				LEFT OUTER JOIN COUNTRY AS C ON D.COUNTRY = C.COUNTRY
+			WHERE A.COMPANY = @pCompanyId
+				AND F.FISCPRD = @pYear
+				AND F.PERIOD = @pPeriod
+				AND ((SUBSTRING(B.CODE,1,10) LIKE '64.__.__.2%') OR
+					(SUBSTRING(B.CODE,1,7) LIKE '20.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '24.__.2%') OR 
+					(SUBSTRING(B.CODE,1,7) LIKE '25.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '26.__.2%'))
+				AND (C.COUNTRYTYPE = 1)
+				AND (C.INTERCODE <> 'GR')
+			ORDER BY F.FINCODE
+        ";
+
+        public override string Prosvasis => @"
+			SELECT F.FINDOC AS InvId, F.TRNDATE AS InvDate,F.PERIOD AS Periodos, 
+				F.FINCODE AS InvSeries, SUBSTRING(B.CODE,1,5) AS Part, B.CODE AS Code,
+				CASE WHEN FPRMS IN (30160) THEN A.NETLINEVAL * -1 ELSE A.NETLINEVAL END AS [Value],
+				SUBSTRING(D.AFM,1,2) AS CountryCode,
+				--SUBSTRING(D.AFM,3,LEN(D.AFM)-2) AS Vat,
+				D.AFM AS VatNumber,
+				CASE 
+					WHEN LEN(D.AFM) > 2 THEN RIGHT(D.AFM, LEN(D.AFM) - 2)
+					ELSE D.AFM
+				END AS Vat,
+				F.SHIPKIND AS ShipKind
+			FROM MTRLINES A 
+				LEFT OUTER JOIN MTRL B ON A.MTRL=B.MTRL
+				LEFT OUTER JOIN FINDOC F ON F.FINDOC=A.FINDOC
+				LEFT OUTER JOIN TRDR AS D ON F.TRDR = D.TRDR 
+				LEFT OUTER JOIN COUNTRY AS C ON D.COUNTRY = C.COUNTRY
+			WHERE A.COMPANY = @pCompanyId
+				AND F.FISCPRD = @pYear
+				AND F.PERIOD = @pPeriod
+				AND ((SUBSTRING(B.CODE,1,10) LIKE '64.__.__.2%') OR
+					(SUBSTRING(B.CODE,1,7) LIKE '20.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '24.__.2%') OR 
+					(SUBSTRING(B.CODE,1,7) LIKE '25.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '26.__.2%'))
+				AND (C.COUNTRYTYPE = 1)
+				AND (C.INTERCODE <> 'GR')
+			ORDER BY F.FINCODE
+        ";
+
+        public override string Prosvasis_C => @"
+			SELECT F.FINDOC AS InvId, F.TRNDATE AS InvDate,F.PERIOD AS Periodos, 
+				F.FINCODE AS InvSeries, SUBSTRING(B.CODE,1,5) AS Part, B.CODE AS Code,
+				CASE WHEN FPRMS IN (30160) THEN A.NETLINEVAL * -1 ELSE A.NETLINEVAL END AS [Value],
+				SUBSTRING(D.AFM,1,2) AS CountryCode,
+				--SUBSTRING(D.AFM,3,LEN(D.AFM)-2) AS Vat,
+				D.AFM AS VatNumber,
+				CASE 
+					WHEN LEN(D.AFM) > 2 THEN RIGHT(D.AFM, LEN(D.AFM) - 2)
+					ELSE D.AFM
+				END AS Vat,
+				F.SHIPKIND AS ShipKind
+			FROM MTRLINES A 
+				LEFT OUTER JOIN MTRL B ON A.MTRL=B.MTRL
+				LEFT OUTER JOIN FINDOC F ON F.FINDOC=A.FINDOC
+				LEFT OUTER JOIN TRDR AS D ON F.TRDR = D.TRDR 
+				LEFT OUTER JOIN COUNTRY AS C ON D.COUNTRY = C.COUNTRY
+			WHERE A.COMPANY = @pCompanyId
+				AND F.FISCPRD = @pYear
+				AND F.PERIOD = @pPeriod
+				AND ((SUBSTRING(B.CODE,1,10) LIKE '64.__.__.2%') OR
+					(SUBSTRING(B.CODE,1,7) LIKE '20.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '24.__.2%') OR 
+					(SUBSTRING(B.CODE,1,7) LIKE '25.__.2%') OR (SUBSTRING(B.CODE,1,7) LIKE '26.__.2%'))
+				AND (C.COUNTRYTYPE = 1)
+				AND (C.INTERCODE <> 'GR')
+			ORDER BY F.FINCODE
+        ";
+    }
+}

@@ -1,0 +1,161 @@
+using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace App.Services.Banking;
+
+public class AvailableBanksCapabilities
+{
+    // ???????????????? Real CLR property ????????????????
+    [JsonIgnore]
+    public bool AISBankAccountListing { get; set; }
+
+    // ??? Incoming JSON: hyphenated name ???
+    [JsonProperty("AIS-Bank-Account-Listing")]
+    private bool readAISBankAccountListing
+    {
+        set => AISBankAccountListing = value;
+    }
+
+    // ??? Outgoing JSON: camelCase name ???
+    [JsonProperty("aisBankAccountListing")]
+    private bool writeAISBankAccountListing
+    {
+        get => AISBankAccountListing;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISBankAccountDetails { get; set; }
+
+    [JsonProperty("AIS-Bank-Account-Details")]
+    private bool readAISBankAccountDetails
+    {
+        set => AISBankAccountDetails = value;
+    }
+
+    [JsonProperty("aisBankAccountDetails")]
+    private bool writeAISBankAccountDetails
+    {
+        get => AISBankAccountDetails;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISBankAccountTransactions { get; set; }
+
+    [JsonProperty("AIS-Bank-Account-Transactions")]
+    private bool readAISBankAccountTransactions
+    {
+        set => AISBankAccountTransactions = value;
+    }
+
+    [JsonProperty("aisBankAccountTransactions")]
+    private bool writeAISBankAccountTransactions
+    {
+        get => AISBankAccountTransactions;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISBankAccountBeneficiaries { get; set; }
+
+    [JsonProperty("AIS-Bank-Account-Beneficiaries")]
+    private bool readAISBankAccountBeneficiaries
+    {
+        set => AISBankAccountBeneficiaries = value;
+    }
+
+    [JsonProperty("aisBankAccountBeneficiaries")]
+    private bool writeAISBankAccountBeneficiaries
+    {
+        get => AISBankAccountBeneficiaries;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISCardAccountListing { get; set; }
+
+    [JsonProperty("AIS-Card-Account-Listing")]
+    private bool readAISCardAccountListing
+    {
+        set => AISCardAccountListing = value;
+    }
+
+    [JsonProperty("aisCardAccountListing")]
+    private bool writeAISCardAccountListing
+    {
+        get => AISCardAccountListing;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISCardAccountDetails { get; set; }
+
+    [JsonProperty("AIS-Card-Account-Details")]
+    private bool readAISCardAccountDetails
+    {
+        set => AISCardAccountDetails = value;
+    }
+
+    [JsonProperty("aisCardAccountDetails")]
+    private bool writeAISCardAccountDetails
+    {
+        get => AISCardAccountDetails;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISCardAccountTransactions { get; set; }
+
+    [JsonProperty("AIS-Card-Account-Transactions")]
+    private bool readAISCardAccountTransactions
+    {
+        set => AISCardAccountTransactions = value;
+    }
+
+    [JsonProperty("aisCardAccountTransactions")]
+    private bool writeAISCardAccountTransactions
+    {
+        get => AISCardAccountTransactions;
+    }
+
+    // ????????????????????????????????????????????????????
+
+    [JsonIgnore]
+    public bool AISConsentUserDetails { get; set; }
+
+    [JsonProperty("AIS-Consent-User-Details")]
+    private bool readAISConsentUserDetails
+    {
+        set => AISConsentUserDetails = value;
+    }
+
+    [JsonProperty("aisConsentUserDetails")]
+    private bool writeAISConsentUserDetails
+    {
+        get => AISConsentUserDetails;
+    }
+}
+
+public class AvailableBank
+{
+    public string Country { get; set; }
+    public string BankBIC { get; set; }
+    public string DisplayName { get; set; }
+    public AvailableBanksCapabilities Capabilities { get; set; }
+}
+
+public class AvailableBanks
+{
+    public List<AvailableBank> Payload { get; set; }
+    public double ExecutionTime { get; set; }
+}
+
+
+

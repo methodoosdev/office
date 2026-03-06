@@ -1,0 +1,109 @@
+﻿@model (IList<App.Models.Accounting.MonthlyFinancialBulletinModel> List, App.Services.Common.Pdf.HtmlPdfItem Item);
+@inject App.Services.Localization.ILocalizationService _localizationService;
+@inject App.Services.Helpers.IDateTimeHelper _dateTimeHelper;
+@inject App.Services.Common.IPriceFormatter _priceFormatter;
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <style>
+        html {
+            font-size: 12px;
+            font-family: 'DejaVu Sans', 'Arial', sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            border-collapse: collapse;
+        }
+
+            table tr th {
+                background-color: #f5f5f5;
+                text-align: left;
+                padding: 5px;
+            }
+
+            table tr,
+            table tr td,
+            table tr th {
+                border: 1px solid #e0e0e0;
+                border-collapse: collapse;
+                padding: 5px;
+            }
+    </style>
+
+</head>
+
+<body>
+    @{ var i = 0; }
+
+    <p style="text-align: right;">
+        <div>@((await _dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("dd/MM/yyyy"))</div>
+    </p>
+
+    <p>
+        <span style="font-size: 16px;">@Model.Item.Title</span>
+    </p>
+
+    <br />
+
+    <table>
+        <colgroup>
+            <col style="width: 8rem;" />
+            <col />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+            <col style="width: 6rem;" />
+        </colgroup>
+        <thead>
+            <tr style="background-color: white;">
+                <td colspan="10">
+                    <div style="font-size: 14px;">@Model.Item.SubTitle</div>
+                </td>
+            </tr>
+            <tr>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.Id"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.Description"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.PeriodCurrentYear"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.PeriodPreviousYear"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.PeriodDefference"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.PeriodRate"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.ProgressivelyCurrentYear"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.ProgressivelyPreviousYear"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.ProgressivelyDefference"))</th>
+                <th>@(await _localizationService.GetResourceAsync("App.Models.MonthlyFinancialBulletinModel.Columns.ProgressivelyRate"))</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.List)
+            {
+<tr>
+    <td>@item.Id</td>
+    <td>@item.Description</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PeriodCurrentYear))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PeriodPreviousYear))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PeriodDefference))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.PeriodRate))%</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.ProgressivelyCurrentYear))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.ProgressivelyPreviousYear))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.ProgressivelyDefference))</td>
+    <td style="text-align:right;">@(await _priceFormatter.FormatDecimalAsync(item.ProgressivelyRate))%</td>
+</tr>
+ if (Model.List.Count() - 1 > i)
+{
+    <span style="display:block; clear:both; page-break-after:always;"></span>
+}
+i++;
+}
+        </tbody>
+    </table>
+
+</body>
+</html>
